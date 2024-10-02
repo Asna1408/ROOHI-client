@@ -1,0 +1,266 @@
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify';
+import { REGEX, VALIDATION_MESSAGES } from '../../constant/validation'
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInSuccess } from "../../redux/user/UserSlice";
+import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { auth } from '../../firebase/firebase';
+
+
+type UserType = {
+  name: string;
+  email: string;
+  phone: string; // Keeping this as string for simplicity of validation/input
+  password: string;
+  rePassword: string;
+};
+
+const Register: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false); 
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [formData, setFormData] = useState<UserType>({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    rePassword: '',
+  });
+
+  console.log(formData)
+
+  const handleGoogleClick = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+
+      const resultsFromGoogle = await signInWithPopup(auth, provider);
+      const { displayName, email } = resultsFromGoogle.user;
+
+      const res = await fetch("/user/googleAuth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: displayName,
+          email: email,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        if (data.alreadyRegistered) {
+          toast.info("User is already registered. You can log in using the login page.");
+        } else {
+          toast.success("User successfully registered and logged in!");
+          dispatch(signInSuccess(data));
+          navigate("/"); // Navigate to the landing page
+        }
+      } else {
+        toast.error("An error occurred during registration.");
+      }
+    } catch (error) {
+      toast.error("An error occurred during Google authentication.");
+      console.log(error);
+    }
+  };
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log(e)
+    if (!formData.name || !formData.email || !formData.phone || !formData.password || !formData.rePassword) {
+      toast('Please fill in all the fields.');
+      return;
+    }
+
+    if (formData.password !== formData.rePassword) {
+      toast.error('Passwords do not match.');
+      return;
+    }
+
+    if (!formData.name) {
+      toast.error(VALIDATION_MESSAGES.NAME.REQUIRED);
+      return;
+    }
+    if (!REGEX.NAME.test(formData.name)) {
+      toast.error(VALIDATION_MESSAGES.NAME.INVALID);
+      return;
+    }
+
+    // Email Validation
+    if (!formData.email) {
+      toast.error(VALIDATION_MESSAGES.EMAIL.REQUIRED);
+      return;
+    }
+    if (!REGEX.EMAIL.test(formData.email)) {
+      toast.error(VALIDATION_MESSAGES.EMAIL.INVALID);
+      return;
+    }
+
+    // Password Validation
+    if (!formData.password) {
+      toast.error(VALIDATION_MESSAGES.PASSWORD.REQUIRED);
+      return;
+    }
+    if (!REGEX.PASSWORD.test(formData.password)) {
+      toast.error(VALIDATION_MESSAGES.PASSWORD.INVALID);
+      return;
+    }
+
+    // Confirm Password Validation
+    if (!formData.rePassword) {
+      toast.error(VALIDATION_MESSAGES.CONFIRM_PASSWORD.REQUIRED);
+      return;
+    }
+    if (formData.password !== formData.rePassword) {
+      toast.error(VALIDATION_MESSAGES.CONFIRM_PASSWORD.MISMATCH);
+      return;
+    }
+
+    const res = await axios.post('/user/signup', {
+      formData
+    });
+
+    if (res.data) {
+      navigate(`/verifyOtp?email=${res?.data?.email}`);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center mt-5 mb-10 bg-white">
+      <div className="bg-white p-8 rounded-lg w-[400px]">
+        <h1 className="text-2xl font-semibold font-serif text-center text-customGray">Register</h1>
+        <div className=" mt-6 flex justify-center">
+          <button
+            onClick={handleGoogleClick}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md flex items-center">
+            <FcGoogle className="w-6 h-6 mr-3" />
+            <span className="font-medium">Sign in with Google</span>
+          </button>
+        </div>
+
+        <div className="flex items-center my-4">
+          <hr className="flex-grow border-gray-300" />
+          <span className="px-4 text-gray-400 font-semibold">OR</span>
+          <hr className="flex-grow border-gray-300" />
+        </div>
+        <form onSubmit={handleSubmit}>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="email">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
+              value={formData.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="email">
+              Email
+            </label>
+            <input
+              
+              id="email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
+              value={formData.email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
+              }
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="email">
+              Mobile
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
+              value={formData.phone}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData((prev) => ({ ...prev, phone: e.target.value }))
+              }
+            />
+          </div>
+          <div className="mb-6 relative">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="password">
+              Password
+            </label>
+            <div className="relative w-full">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
+              value={formData.password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData((prev) => ({ ...prev, password: e.target.value }))
+              }
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-3 flex items-center justify-center"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+            </div>
+          </div>
+          <div className="mb-6 relative">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="password">
+              Confirm Password
+            </label>
+            <div className="relative w-full">
+            <input
+              type="repassword"
+              id="repassword"
+              className="w-full px-4 py-2  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
+              value={formData.rePassword}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData((prev) => ({ ...prev, rePassword: e.target.value }))
+              }
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-3 flex items-center justify-center"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+            </div>
+          </div>
+          <div className="items-center">
+            <button
+              type="submit"
+              className="w-full bg-custom-gradient hover:from-yellow-500 hover:to-orange-500 text-white font-bold py-2 fond-serif  "
+            >
+              SIGNUP
+            </button>
+            <div className="mt-6 text-center">
+              <a href="/login" className="text-md text-gray-600 font-serif hover:text-gray-900">
+                Already have an account? Sign In
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  );
+};
+
+export default Register;

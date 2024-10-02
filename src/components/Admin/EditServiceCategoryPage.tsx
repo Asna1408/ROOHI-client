@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
+import { useNavigate } from 'react-router-dom'; 
 
 interface EditServiceCategoryProps {
   categoryId: string;
@@ -11,7 +11,8 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
   const [typeName, setTypeName] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Use useNavigate to handle navigation
+  const navigate = useNavigate(); 
+
 
   // Fetch the existing category details on component mount
   useEffect(() => {
@@ -30,25 +31,31 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
     fetchCategory();
   }, [categoryId]);
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    const trimmedTypeName = typeName.trim();
+    const trimmedDescription= description.trim();
+
+    if (!trimmedTypeName || !trimmedDescription) {
+      toast.error("Please fill out all fields without leading space");  
+      return;
+    }
+
+    setLoading(true);
     try {
-      // Sending PUT request to update the service category
       const response = await axios.put(
         `/admin/EditService-category/${categoryId}`, 
         {
-          type_name: typeName,
-          description: description
+          type_name: trimmedTypeName,
+        description: trimmedDescription,
         }
       );
 
       toast.success('Category updated successfully!');
       console.log('Updated Category:', response.data);
-
-      // Navigate back to service category list or desired page after success
-      navigate('/Superadmin/ServiceList'); // Use navigate instead of history.push
+      navigate('/Superadmin/ServiceList'); 
 
     } catch (error) {
       toast.error('Error updating category');

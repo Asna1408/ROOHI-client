@@ -81,21 +81,14 @@ const Register: React.FC = () => {
       toast('Please fill in all the fields.');
       return;
     }
-
-    if (formData.password !== formData.rePassword) {
-      toast.error('Passwords do not match.');
-      return;
-    }
-
-    if (!formData.name) {
-      toast.error(VALIDATION_MESSAGES.NAME.REQUIRED);
-      return;
-    }
     if (!REGEX.NAME.test(formData.name)) {
       toast.error(VALIDATION_MESSAGES.NAME.INVALID);
       return;
     }
-
+    if (!formData.name) {
+      toast.error(VALIDATION_MESSAGES.NAME.REQUIRED);
+      return;
+    }
     // Email Validation
     if (!formData.email) {
       toast.error(VALIDATION_MESSAGES.EMAIL.REQUIRED);
@@ -106,6 +99,15 @@ const Register: React.FC = () => {
       return;
     }
 
+    if (!formData.phone) {
+      toast.error(VALIDATION_MESSAGES.MOBILE.REQUIRED);
+      return;
+    }
+    if (!REGEX.MOBILE.test(formData.phone)) {
+      toast.error(VALIDATION_MESSAGES.MOBILE.INVALID);
+      return;
+    }
+    
     // Password Validation
     if (!formData.password) {
       toast.error(VALIDATION_MESSAGES.PASSWORD.REQUIRED);
@@ -125,6 +127,10 @@ const Register: React.FC = () => {
       toast.error(VALIDATION_MESSAGES.CONFIRM_PASSWORD.MISMATCH);
       return;
     }
+    if (formData.password !== formData.rePassword) {
+      toast.error('Passwords do not match.');
+      return;
+    }
 
     const res = await axios.post('/user/signup', {
       formData
@@ -136,9 +142,9 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center mt-5 mb-10 bg-white">
-      <div className="bg-white p-8 rounded-lg w-[400px]">
-        <h1 className="text-2xl font-semibold font-serif text-center text-customGray">Register</h1>
+<div className="flex items-center justify-center bg-white min-h-screen">
+      <div className="bg-white p-8 rounded-lg w-[400px] ">
+      <h1 className="text-2xl font-semibold font-serif text-center text-customGray">Register</h1>
         <div className=" mt-6 flex justify-center">
           <button
             onClick={handleGoogleClick}
@@ -156,11 +162,11 @@ const Register: React.FC = () => {
         <form onSubmit={handleSubmit}>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="email">
+            <label className="block text-gray-700 font-medium mb-2 font-serif">
               Name
             </label>
             <input
-              type="text"
+             
               id="name"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
               value={formData.name}
@@ -170,7 +176,7 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="email">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" >
               Email
             </label>
             <input
@@ -184,11 +190,11 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="email">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" >
               Mobile
             </label>
             <input
-              type="tel"
+         
               id="phone"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
               value={formData.phone}
@@ -198,7 +204,7 @@ const Register: React.FC = () => {
             />
           </div>
           <div className="mb-6 relative">
-            <label className="block text-gray-700 font-medium mb-2 font-serif" htmlFor="password">
+            <label className="block text-gray-700 font-medium mb-2 font-serif" >
               Password
             </label>
             <div className="relative w-full">
@@ -226,7 +232,7 @@ const Register: React.FC = () => {
             </label>
             <div className="relative w-full">
             <input
-              type="repassword"
+              
               id="repassword"
               className="w-full px-4 py-2  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
               value={formData.rePassword}

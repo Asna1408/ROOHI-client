@@ -123,10 +123,6 @@ const handleSubmit = async (e: React.FormEvent) => {
 <div className="flex  items-center justify-center bg-white">
       <div className="bg-white p-8 rounded-lg w-[400px]">
       <h1 className="text-2xl font-semibold font-serif text-center text-customGray">Login</h1>
-      
-        
-        {/* Social Login Buttons */}
-        
         <div className=" mt-6 flex justify-center">
     <button
       onClick={handleGoogleClick}
@@ -150,7 +146,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               Email
             </label>
             <input
-              type="email"
+             
               id="email"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
               value ={email}

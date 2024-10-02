@@ -1,31 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const AddServiceCategory: React.FC = () => {
   const [typeName, setTypeName] = useState('');  // State for type_name
   const [description, setDescription] = useState('');  // State for description
   const [loading, setLoading] = useState(false);  // State to handle loading
+  const [existingTypes, setExistingTypes] = useState<string[]>([]); 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+
+    const fetchExistingTypes = async () => {
+      try {
+        const response = await axios.get('/admin/ServiceList'); 
+        setExistingTypes(response.data.map((item: { type_name: string }) => item.type_name.trim().toLowerCase())); // Store types in lower case
+      } catch (error) {
+        console.error('Error fetching existing service types:', error);
+      }
+    };
+    
+    fetchExistingTypes();
+  }, []);
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
-    if (!typeName || !description) {
-      toast.error("Please fill out all fields");  
+    const trimmedTypeName = typeName.trim();
+    const trimmedDescription= description.trim();
+
+    if (!trimmedTypeName || !trimmedDescription) {
+      toast.error("Please fill out all fields without leading space");  
+      return;
+    }
+
+    if (existingTypes.includes(trimmedTypeName.toLowerCase())) {
+      toast.error("Service type name already exists. Please choose a different name.");
       return;
     }
 
     setLoading(true);
     try {
       const response = await axios.post('/admin/AddServiceCategory', {
-        type_name: typeName,
-        description: description,
+        type_name: trimmedTypeName,
+        description: trimmedDescription,
       });
 
       if (response.status === 201) {
         toast.success('Service category added successfully!');
-        setTypeName('');  // Clear input fields on success
-        setDescription('');
+        navigate('/Superadmin/ServiceList');
       } else {
         toast.error('Failed to add service category.');
       }

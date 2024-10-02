@@ -76,7 +76,7 @@ import Swal from 'sweetalert2';
 
                     <div className="w-1/3 ">  
                         <a href="/">  
-                            <span className="text-2xl font-extrabold text-customGray font-serif">PERFECT BRIDE</span>  
+                            <span className="text-xl font-extrabold text-customGray font-serif">PERFECT BRIDE</span>  
                         </a>  
                     </div>  
 

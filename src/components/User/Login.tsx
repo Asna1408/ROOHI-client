@@ -95,6 +95,11 @@ const handleSubmit = async (e: React.FormEvent) => {
     password
   })
 
+  if(res.data == 'Your Account is Blocked'){
+    toast.error("Your Account has been Blocked")
+    navigate("/login")
+    return
+  }
 
   if(res.data == 'Account not verified. Please verify your account before logging in.'){
     toast.error("User is not verified")

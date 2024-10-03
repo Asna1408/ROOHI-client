@@ -7,8 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {REGEX,VALIDATION_MESSAGES} from '../../constant/validation'
 import { signInSuccess } from "../../redux/user/UserSlice";
-
-import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 
@@ -21,12 +19,12 @@ const[password,setPassword] = useState<string>("")
 const [showPassword, setShowPassword] = useState(false); 
 const navigate = useNavigate();
 const dispatch = useDispatch();
-const { currentUser } = useSelector((state: any) => state.user);
+const { currentAdmin } = useSelector((state: any) => state.user);
 
 
 useEffect(()=>{
-    if(currentUser){
-      navigate('/');
+    if(currentAdmin){
+      navigate('/Superadmin/dashboard');
     }
 },[])
 

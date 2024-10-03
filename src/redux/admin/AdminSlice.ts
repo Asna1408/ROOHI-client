@@ -35,5 +35,5 @@ const AdminSlice = createSlice({
 });
 
 export const { signInSuccess, signoutSuccess } = AdminSlice.actions;
-
+export const selectAdmin = (state: { auth: { currentAdmin: any; }; })=> state.auth.currentAdmin
 export default AdminSlice.reducer;

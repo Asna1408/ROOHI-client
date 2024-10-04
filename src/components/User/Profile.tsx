@@ -8,24 +8,11 @@ const Profile = () => {
    
       <div className="container mx-auto p-6 flex flex-col md:flex-row gap-6 mt-10 mb-10">
         {/* Sidebar */}
-        <aside className="w-full md:w-1/4 flex flex-col space-y-4">
-          <img
-            src="https://via.placeholder.com/100"
-            alt="Profile"
-            className="rounded-full mx-auto w-28 h-28"
-          />
-          <Link to="/profile" className="bg-custom-gradient text-white py-2 px-4 text-center lg">Profile</Link>
-          <Link to="/dashboard" className="bg-custom-gradient text-white py-2 px-4 text-center lg">Dashboard</Link>
-          <Link to="/posts" className="bg-custom-gradient text-white py-2 px-4 text-center lg">Posts</Link>
-          <Link to="/review" className="bg-custom-gradient text-white py-2 px-4 text-center lg">Review</Link>
-          <Link to="/notifications" className="bg-custom-gradient text-white py-2 px-4 text-center lg">Notifications</Link>
-          <Link to="/chat" className="bg-custom-gradient text-white py-2 px-4 text-center lg">Chat</Link>
-        </aside>
+        
 
         {/* Profile Edit Section */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Profile</h2>
-
+         
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name and Email Inputs */}
             <div>

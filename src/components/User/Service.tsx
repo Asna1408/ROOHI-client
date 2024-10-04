@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaFilter, FaStar } from 'react-icons/fa';
 
-const ServicePage = () => {
+const Service = () => {
   const services = [
     {
       id: 1,
@@ -74,4 +74,4 @@ const ServicePage = () => {
   );
 };
 
-export default ServicePage;
+export default Service;

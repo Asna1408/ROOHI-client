@@ -1,16 +1,17 @@
 import React from 'react'
-import ServicePage from '../../components/User/ServicePage'
+
 import Header from '../../components/User/Header'
 import Footer from '../../components/User/Footer'
+import Service from '../../components/User/Service'
 
-function Service() {
+function Servicepage() {
   return (
     <div>
        <Header/>
-      <ServicePage />
+      <Service />
       <Footer/>
     </div>
   )
 }
 
-export default Service
+export default Servicepage

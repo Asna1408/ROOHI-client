@@ -14,7 +14,7 @@ import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminUser from "./pages/Admin/AdminUser";
 import AdminService from "./pages/Admin/AdminService";
-import Service from "./pages/User/Service";
+import Servicepage from "./pages/User/ServicePage";
 import Artist from "./pages/User/Artist";
 import Booking from "./pages/User/Booking";
 import Profilepage from "./pages/User/Profilepage";
@@ -22,6 +22,8 @@ import PostPage from "./pages/User/PostPage";
 import AddServiceCategory from "./pages/Admin/AddServiceCategory";
 import EditServiceCategory from "./pages/Admin/EditServiceCategory";
 import AdminPrivateRoute from "./components/Admin/AdminPrivateRoute";
+import PostTablepage from "./pages/User/PostTablepage";
+
 
 
 const App = () => {
@@ -36,11 +38,13 @@ const App = () => {
                 <Route path='/verifyOtp' element={<Otppage />} />
                 <Route path='/forget_password' element={<Forgetpage />} />
                 <Route path='/reset_password' element={<Resetpage />} />
-                <Route path='/services' element={<Service />} />
+                <Route path='/services' element={<Servicepage />} />
                 <Route path='/profile' element={<Profilepage />} />
                 <Route path='/artist' element={<Artist />} />
                 <Route path='/booknow' element={<Booking />} />
+                <Route path='/post' element={<PostTablepage />} />
                 <Route path='/addpost' element={<PostPage />} />
+                
 
 
                 <Route path="/Superadmin/login" element={<AdminLogin />} />

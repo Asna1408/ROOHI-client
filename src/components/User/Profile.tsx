@@ -1,7 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom"; // If you're using React Router
 
 const Profile = () => {
+
+  const currentUser = useSelector((state: any) => state.user.currentUser);
+  console.log('CurrentUser:',currentUser)
+  
   return (
   
     
@@ -19,14 +24,16 @@ const Profile = () => {
               <label className="block text-sm font-medium text-gray-700">Name</label>
               <input
                 type="text"
+                value ={currentUser.name}
                 className="mt-1 block w-full p-2 border border-customGold md"
-                placeholder="Enter your name"
+                
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
                 type="email"
+                value ={currentUser.email}
                 className="mt-1 block w-full p-2 border border-customGold md"
                 placeholder="Enter your email"
               />

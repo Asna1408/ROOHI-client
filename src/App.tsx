@@ -14,7 +14,7 @@ import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminUser from "./pages/Admin/AdminUser";
 import AdminService from "./pages/Admin/AdminService";
-import Servicepage from "./pages/User/ServicePage";
+import Servicepage from "./pages/User/Servicepage";
 import Artist from "./pages/User/Artist";
 import Booking from "./pages/User/Booking";
 import Profilepage from "./pages/User/Profilepage";
@@ -23,6 +23,8 @@ import AddServiceCategory from "./pages/Admin/AddServiceCategory";
 import EditServiceCategory from "./pages/Admin/EditServiceCategory";
 import AdminPrivateRoute from "./components/Admin/AdminPrivateRoute";
 import PostTablepage from "./pages/User/PostTablepage";
+import EditPostPage from "./pages/User/EditPostPage";
+
 
 
 
@@ -32,6 +34,7 @@ const App = () => {
     <ToastContainer />
     <Router>
     <Routes>
+                //user routes
                 <Route path='/' element={<Homepage />} />
                 <Route path='/register' element={<Registerpage />} />
                 <Route path='/login' element={<Loginpage />} />
@@ -44,9 +47,13 @@ const App = () => {
                 <Route path='/booknow' element={<Booking />} />
                 <Route path='/post' element={<PostTablepage />} />
                 <Route path='/addpost' element={<PostPage />} />
+                <Route path='/editpost/:postId' element={<EditPostPage />} />
+             
+             
+              
                 
 
-
+                //admin routes
                 <Route path="/Superadmin/login" element={<AdminLogin />} />
                
                 <Route path="/Superadmin/dashboard" element={<AdminDashboard />} />

@@ -1,7 +1,8 @@
 import React from 'react'
 import Header from '../../components/User/Header'
-import BookingForm from '../../components/User/BookingForm'
+
 import Footer from '../../components/User/Footer'
+import BookingForm from '../../components/User/BookingForm'
 
 const Booking = () => {
   return (

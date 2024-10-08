@@ -1,16 +1,18 @@
 import React from 'react'
 import Header from '../../components/User/Header'
-import Footer from '../../components/User/Footer'
-import ArtistPage from '../../components/User/ArtistPage'
 
-function Artist() {
+import Footer from '../../components/User/Footer'
+
+import BookingSuccess from '../../components/User/BookingSuccess'
+
+const Successbookpage = () => {
   return (
     <div>
       <Header/>
-      <ArtistPage/>
-      <Footer />
+      <BookingSuccess/>
+      <Footer/>
     </div>
   )
 }
 
-export default Artist
+export default Successbookpage

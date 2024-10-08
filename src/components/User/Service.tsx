@@ -1,30 +1,42 @@
-import React from 'react';
+// Service.tsx
+import React, { useEffect, useState } from 'react';
 import { FaFilter, FaStar } from 'react-icons/fa';
 
+interface Service {
+  _id: string;
+  service_name: string;
+  location: string;
+  price: number;
+  rating: number; // Assuming you want to show this rating
+  images: string[]; // To access image URLs
+}
+
 const Service = () => {
-  const services = [
-    {
-      id: 1,
-      name: "Shaz Hennas",
-      location: "Kochi",
-      price: 1400,
-      rating: 9,
-      imageUrl:
-        "https://example.com/image1.jpg", // Replace with your image URL
-      link: "/service/1" // Replace with the actual link to the service detail page
-    },
-    {
-      id: 2,
-      name: "Shaz Hennas",
-      location: "Kochi",
-      price: 1400,
-      rating: 9,
-      imageUrl:
-        "src/assets/user/category/olive_branch.png", // Replace with your image URL
-      link: "/service/2" // Replace with the actual link to the service detail page
-    },
-    // Add more services as needed
-  ];
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('/user/getallpost');
+        if (!response.ok) {
+          throw new Error('Failed to fetch services');
+        }
+        const data = await response.json();
+        setServices(data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchServices();
+  }, []);
+  
+  if (loading) {
+    return <div>Loading...</div>; // Show loading state
+  }
 
   return (
     <div className="container mx-auto p-10">
@@ -46,19 +58,19 @@ const Service = () => {
       {/* Services Grid */}
       <div className="grid grid-cols-3 gap-6">
         {services.map((service) => (
-          <div key={service.id} className="border rounded-lg overflow-hidden shadow-lg text-customGray">
+          <div key={service._id} className="border rounded-lg overflow-hidden shadow-lg text-customGray">
             {/* Image with href */}
-            <a href="/artist">
+            <a href={`/artist/${service._id}`}>
               <img
-                src={service.imageUrl}
-                alt={service.name}
+                src={service.images[0]} // Access the first image
+                alt={service.service_name}
                 className="w-full h-48 object-cover"
               />
             </a>
             <div className="p-4">
               {/* Name with href */}
-              <a href={service.link}>
-                <h2 className="font-bold text-xl hover:underline">{service.name}</h2>
+              <a href={`/artist/${service._id}`}>
+                <h2 className="font-bold text-xl hover:underline">{service.service_name}</h2>
               </a>
               <p className="text-sm text-gray-600">{service.location}</p>
               <p className="text-lg font-bold mt-2">₹{service.price}</p>

@@ -15,6 +15,7 @@ const EditPost = () => {
   const [availability, setAvailability] = useState<Date[]>([]);
   const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]); 
   const { currentUser } = useSelector((state: any) => state.user);
   const navigate = useNavigate();
 
@@ -56,6 +57,7 @@ const EditPost = () => {
             const data = await response.json();
             setServiceData(data);
             setAvailability(data.availability.map((dateStr: string) => new Date(dateStr)) || []);
+            setImagePreviews(data.images || []);
             setImageFiles(data.images || []);
           } else {
             toast.error('Failed to fetch service data');
@@ -82,20 +84,37 @@ const EditPost = () => {
     }
   };
 
-  const handleRemoveDate = (dateToRemove: Date) => {
+  const handleRemoveDate = (dateToRemove: Date, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
     setAvailability(availability.filter(date => date.getTime() !== dateToRemove.getTime()));
   };
   
 
+ 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
+
+      // Create previews for the selected images
+      const newImagePreviews = filesArray.map(file => URL.createObjectURL(file));
+      setImagePreviews(prev => [...prev, ...newImagePreviews]);
+
+      // Store the files for future uploading
       setImageFiles(prevFiles => [...prevFiles, ...filesArray]);
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImageFiles(imageFiles.filter((_, i) => i !== index));
+
+  const handleRemoveImage = (index: number,e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    const updatedImageFiles = [...imageFiles];
+    const updatedImagePreviews = [...imagePreviews];
+  
+    updatedImageFiles.splice(index, 1);
+    updatedImagePreviews.splice(index, 1);
+  
+    setImageFiles(updatedImageFiles);
+    setImagePreviews(updatedImagePreviews);
   };
 
   const validateFields = (): boolean => {
@@ -115,8 +134,8 @@ const EditPost = () => {
       toast.error('Location is required');
       return false;
     }
-    const priceValue = Number(serviceData.price);
-    if (!serviceData.price.trim() || isNaN(priceValue) || priceValue <= 0) {
+    
+    if (!serviceData.price.toString().trim()) {
       toast.error('A valid price is required');
       return false;
     }
@@ -239,6 +258,7 @@ const EditPost = () => {
   type="date"
   className="mt-1 block w-full p-2 border border-customGold"
   onChange={handleDateChange}
+  min={new Date().toISOString().split("T")[0]} // Set min to today's date
 />
 <div className="mt-2">
   <h3 className="text-sm font-medium text-gray-700">Selected Dates:</h3>
@@ -247,7 +267,7 @@ const EditPost = () => {
       <li key={index} className="flex justify-between items-center mt-1">
         <span>{date.toDateString()}</span>
         <button
-          onClick={() => handleRemoveDate(date)}
+          onClick={(e) => handleRemoveDate(date, e)}
           className="text-red-500 hover:underline"
         >
           Remove
@@ -267,19 +287,20 @@ const EditPost = () => {
 </div>
 <div className="mt-2">
   <h3 className="text-sm font-medium text-gray-700">Selected Images:</h3>
-  <ul>
-    {imageFiles.map((file, index) => (
-      <li key={index} className="flex justify-between items-center mt-1">
-        <span>{file.name}</span>
+ 
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+  {imagePreviews.map((image, index) => (
+      <div key={index} className="relative">
+      <img src={image} alt={`Preview ${index}`} className="w-full h-32 object-cover rounded-lg" />
         <button
-          onClick={() => handleRemoveImage(index)}
+          onClick={(e) => handleRemoveImage(index,e)}
           className="text-red-500 hover:underline"
         >
           Remove
         </button>
-      </li>
+     </div>
     ))}
-  </ul>
+    </div>
 </div>
 </div>
 </div>

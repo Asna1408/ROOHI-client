@@ -1,102 +1,164 @@
-import React, { useState } from 'react';
-import { FaCalendarAlt } from 'react-icons/fa';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { format } from 'date-fns';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { RootState } from '../../redux/store'; 
+import { loadStripe } from '@stripe/stripe-js';
 
-const BookingForm = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 
-  const timeSlots = ['11:30 AM', '12:30 PM', '1:30 PM', '4:30 PM', '5:30 PM', '6:30 PM'];
+const BookingForm: React.FC = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const serviceId = queryParams.get('serviceId'); 
+  const selectedDate = useSelector((state: RootState) => state.booking.selectedDate); 
+  const { currentUser } = useSelector((state: any) => state.user);
+  const [service, setService] = useState<any>(null); 
+  const [stripePromise] = useState(() => loadStripe('pk_test_51Q7VPGGWw2JRPJ2C46Z6Y0HaJDXkEAd0vriu3U4OU1HZs2cvcH4hhzsdbk9pPeoesJgMFUdkAUtJzsabxoJsRHhE00KCLyUpjO')); // Replace with your Stripe public key
 
-  const handleSlotSelect = (slot: string) => {
-    setSelectedSlot(slot);
+  useEffect(() => {
+    const fetchServiceDetails = async () => {
+      try {
+        console.log("Fetching service with ID:", serviceId); 
+        const response = await axios.get(`/user/servicedetails/${serviceId}`);
+        console.log("Service details fetched:", response.data); // Debugging
+        setService(response.data);
+      } catch (error) {
+        console.error('Error fetching service details:', error);
+      }
+    };
+
+    if (serviceId) {
+      fetchServiceDetails();
+    }
+  }, [serviceId]);
+
+  // Sample frontend code to handle booking
+  const handleBooking = async () => {
+    if (!serviceId || !currentUser?._id || !selectedDate) {
+      console.error('Missing required booking information');
+      return;
+    }
+
+    const amount = service.price * 100; // Amount in cents (e.g., service price in INR converted to cents)
+    const currency = 'inr'; // Currency, you can change as per requirement
+
+    try {
+      const response = await fetch('/user/booknowcheckout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serviceId,
+          userId: currentUser._id,
+          selectedDate,
+          amount,
+          currency,
+        }),
+      });
+
+      if (!response.ok) {
+        // Handle error
+        const error = await response.json();
+        console.error('Error creating booking:', error);
+        return;
+      }
+
+      const { sessionId } = await response.json();
+      const stripe = await stripePromise; 
+
+    
+      if (!stripe) {
+        console.error('Stripe.js has not loaded yet.');
+        return;
+      }
+
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (error) {
+      console.error('Error during booking process:', error);
+    }
   };
 
   return (
-    <div className="container mx-auto p-4 lg:p-8">
-      <h1 className="text-3xl font-bold font-serif text-customGray mb-6">BOOKING</h1>
-      <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-8">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4"> {/* Added flexbox properties and background */}
+      <div className="w-full lg:w-1/2 border p-6 rounded-lg shadow-md space-y-4">
+        <h1 className="text-2xl font-bold mb-4 flex item-center justify-center">Booking Form</h1>
 
-        {/* Booking Form */}
-        <div className="w-full lg:w-1/2 border p-6 rounded-lg shadow-md space-y-4">
+        {service ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-2 font-semibold">Date</label>
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                className="border w-full p-2 rounded"
-                dateFormat="MM/dd/yyyy"
-              />
-            </div>
             <div>
               <label className="block mb-2 font-semibold">Artist Name</label>
               <input
                 type="text"
-                value="SHAZ mehendi"
+                value={service.service_name}
                 disabled
                 className="border w-full p-2 rounded bg-gray-200"
               />
             </div>
+
+            <div>
+              <label className="block mb-2 font-semibold">Selected Date</label>
+              <input
+                value={selectedDate || 'No date selected'}
+                disabled
+                className="border w-full p-2 rounded bg-gray-200"
+              />
+            </div>
+
             <div>
               <label className="block mb-2 font-semibold">Name</label>
-              <input type="text" className="border w-full p-2 rounded" />
+              <input
+                type="text"
+                name="name"
+                value={currentUser.name}
+                disabled
+                className="border w-full p-2 rounded bg-gray-200"
+              />
             </div>
-            <div>
-              <label className="block mb-2 font-semibold">City</label>
-              <input type="text" className="border w-full p-2 rounded" />
-            </div>
-            <div>
-              <label className="block mb-2 font-semibold">Email</label>
-              <input type="email" className="border w-full p-2 rounded" />
-            </div>
-            <div>
-              <label className="block mb-2 font-semibold">State</label>
-              <input type="text" className="border w-full p-2 rounded" />
-            </div>
+
             <div>
               <label className="block mb-2 font-semibold">Contact No</label>
-              <input type="text" className="border w-full p-2 rounded" />
+              <input
+                type="text"
+                name="contactNo"
+                value={currentUser.phone}
+                disabled
+                className="border w-full p-2 rounded bg-gray-200"
+              />
             </div>
+
+            <div>
+              <label className="block mb-2 font-semibold">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={currentUser.email}
+                disabled
+                className="border w-full p-2 rounded bg-gray-200"
+              />
+            </div>
+
             <div>
               <label className="block mb-2 font-semibold">Payment</label>
-              <input type="text" className="border w-full p-2 rounded" />
+              <input
+                type="text"
+                name="payment"
+                value={`₹${service.price}`} 
+                disabled
+                className="border w-full p-2 rounded bg-gray-200"
+              />
             </div>
           </div>
-          <button className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4">
-            BOOK NOW
-          </button>
-        </div>
+        ) : (
+          <p>Loading service details...</p>
+        )}
 
-        {/* Slot Booking */}
-        <div className="w-full lg:w-1/2">
-          <h2 className="text-xl font-semibold mb-4">Select Time Slot</h2>
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold mb-2">
-              {format(selectedDate || new Date(), 'EEEE, MMMM dd')}
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              {timeSlots.map((slot) => (
-                <button
-                  key={slot}
-                  onClick={() => handleSlotSelect(slot)}
-                  className={`border  px-4 py-2 ${
-                    selectedSlot === slot ? 'bg-custom-gradient text-white' : 'bg-white text-customGold'
-                  } hover:bg-custom-gradient hover:text-white`}
-                >
-                  {slot}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Timezone */}
-      <div className="mt-4 text-center">
-        <p className="text-gray-500 text-sm">Asia/Calcutta ({format(new Date(), 'hh:mm a')})</p>
+        <button
+          className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"
+          onClick={handleBooking} // Calling the handleBooking function on button click
+        >
+          CONFIRM PAYMENT
+        </button>
       </div>
     </div>
   );

@@ -24,6 +24,8 @@ import EditServiceCategory from "./pages/Admin/EditServiceCategory";
 import AdminPrivateRoute from "./components/Admin/AdminPrivateRoute";
 import PostTablepage from "./pages/User/PostTablepage";
 import EditPostPage from "./pages/User/EditPostPage";
+import Datespage from "./pages/User/Datespage";
+import Successbookpage from "./pages/User/Successbookpage";
 
 
 
@@ -43,11 +45,15 @@ const App = () => {
                 <Route path='/reset_password' element={<Resetpage />} />
                 <Route path='/services' element={<Servicepage />} />
                 <Route path='/profile' element={<Profilepage />} />
-                <Route path='/artist' element={<Artist />} />
-                <Route path='/booknow' element={<Booking />} />
+                <Route path='/artist/:id' element={<Artist />} />
                 <Route path='/post' element={<PostTablepage />} />
                 <Route path='/addpost' element={<PostPage />} />
                 <Route path='/editpost/:postId' element={<EditPostPage />} />
+                <Route path='/bookdate/:serviceId' element={<Datespage />} />
+                <Route path='/bookingform' element={<Booking />} />
+                <Route path='/booksuccess' element={<Successbookpage />} />
+                
+
              
              
               

@@ -45,6 +45,11 @@ const Post = () => {
     setServiceData(prevState => ({ ...prevState, [name]: value }));
   };
   
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const minDate = tomorrow.toISOString().split('T')[0];
+
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = new Date(e.target.value);
@@ -227,7 +232,9 @@ const Post = () => {
             <input
               type="date"
               className="mt-1 block w-full p-2 border border-customGold"
+            
               onChange={handleDateChange}
+              min={minDate} 
             />
            
             <div className="mt-2">

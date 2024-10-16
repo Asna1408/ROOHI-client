@@ -26,6 +26,11 @@ import PostTablepage from "./pages/User/PostTablepage";
 import EditPostPage from "./pages/User/EditPostPage";
 import Datespage from "./pages/User/Datespage";
 import Successbookpage from "./pages/User/Successbookpage";
+import BookingByUserPage from "./pages/User/BookingByUserPgae";
+import BookingByServicePage from "./pages/User/BookingByServicePage";
+import Bookeddetailpage from "./pages/User/Bookeddetailpage";
+import AdminBooking from "./pages/Admin/AdminBooking";
+import Adminbookingsingle from "./pages/Admin/Adminbookingsingle";
 
 
 
@@ -51,7 +56,12 @@ const App = () => {
                 <Route path='/editpost/:postId' element={<EditPostPage />} />
                 <Route path='/bookdate/:serviceId' element={<Datespage />} />
                 <Route path='/bookingform' element={<Booking />} />
-                <Route path='/booksuccess' element={<Successbookpage />} />
+                <Route path='/booking/success' element={<Successbookpage />} />
+                <Route path='/bookingdetailsByUser' element={<BookingByUserPage />} />
+                <Route path='/bookingdetailsByProvider' element={<BookingByServicePage />} />
+                <Route path='/bookingdetail/:BookingId' element={<Bookeddetailpage />} />
+                
+
                 
 
              
@@ -67,6 +77,8 @@ const App = () => {
                 <Route path="/Superadmin/ServiceList" element={<AdminService/>} />
                 <Route path="/Superadmin/AddServiceCategory" element={<AddServiceCategory/>} />
                 <Route path="/Superadmin/EditServiceCategory/:id" element={<EditServiceCategory />} />
+                <Route path="/Superadmin/BookingList" element={<AdminBooking />} />
+                <Route path="/Superadmin/BookingList/:bookingId" element={<Adminbookingsingle />} />
                 
             </Routes>
     </Router>

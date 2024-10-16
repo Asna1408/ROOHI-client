@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaCalendarCheck  className="mr-2 text-customGold" />
-        <Link to="/booking" className="hover:text-white">Booking</Link>
+        <Link to="/Superadmin/BookingList" className="hover:text-white">Booking</Link>
       </li>
       
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">

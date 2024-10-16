@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setSelectedDate } from "../../redux/user/BookingSlice"; // Import Redux action
+import { toast } from 'react-toastify';
 
 interface AvailableDatesProps {
   serviceId: string; // Define the type for serviceId
@@ -12,17 +13,27 @@ interface AvailableDatesProps {
 const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
   const [availableDates, setAvailableDates] = useState<string[]>([]); // Define the type for availableDates
   const [selectedDate, setSelectedDateState] = useState<string | null>(null); // Local state for selected date
+  const [bookedDates, setBookedDates] = useState<string[]>([]); 
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Service ID:", serviceId);
     const fetchAvailableDates = async () => {
       try {
         const response = await axios.get(`/user/services/${serviceId}/availability`);
-        setAvailableDates(response.data);
+        const { availableDates, bookedDates } = response.data;
+
+        console.log(response.data);
+
+        setAvailableDates(availableDates);
+        setBookedDates(bookedDates);
       } catch (error) {
+        toast.error("failed to fetch ")
         console.error('Error fetching availability:', error);
+
       }
     };
 
@@ -31,7 +42,9 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
 
   // Handle date selection
   const handleDateSelect = (date: string) => {
-    setSelectedDateState(date);
+    if (!bookedDates.includes(date)) {
+      setSelectedDateState(date);
+    }
   };
 
   // Handle confirm date and navigation
@@ -40,7 +53,7 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
       dispatch(setSelectedDate(selectedDate)); // Store the selected date in Redux
       navigate(`/bookingform?serviceId=${serviceId}`); // Navigate to the booking form with serviceId
     } else {
-      alert('Please select a date before confirming.');
+      toast('Please select a date before confirming.');
     }
   };
 
@@ -58,11 +71,14 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
                 <button
                   key={index}
                   className={`border px-4 py-2 ${
+                    bookedDates.includes(date) ? 'bg-red-500 cursor-not-allowed' : 
                     selectedDate === date ? 'bg-green-500' : 'bg-custom-gradient'
                   } text-white hover:bg-custom-gradient hover:text-white`}
                   onClick={() => handleDateSelect(date)}
+                  disabled={bookedDates.includes(date)}
+                   title={bookedDates.includes(date) ? format(new Date(date), 'dd MMM yyyy') : ''}
                 >
-                  {format(new Date(date), 'dd MMM yyyy')}
+                  {bookedDates.includes(date) ? 'Booked' : format(new Date(date), 'dd MMM yyyy')}
                 </button>
               ))}
             </div>
@@ -75,6 +91,7 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
         <button
           className="bg-custom-gradient text-white px-6 py-3 rounded-lg"
           onClick={handleConfirmDate}
+          disabled={!selectedDate} 
         >
           Confirm Date
         </button>

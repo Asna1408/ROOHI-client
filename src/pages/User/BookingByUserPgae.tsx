@@ -12,8 +12,8 @@ function BookingByUserPage() {
         <div className="bg-white-100 w-1/4 p-4"> {/* Sidebar area */}
           <UserSidebar />
         </div>
-        <div className="w-3/4 p-6 overflow-y-auto"> {/* Main content area */}
-          <h2 className="text-2xl font-semibold font-serif text-customGray mb-4">My Posts</h2>
+        <div className="w-3/4 p-4 overflow-y-auto"> {/* Main content area */}
+          <h2 className="text-2xl font-semibold font-serif text-customGray mb-4">My Bookings</h2>
           <BookingDetailsbyuser/>
         </div>
       </div>

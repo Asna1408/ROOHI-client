@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux'; // Assuming you have Redux for user management
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import TableComponent from "../Common/TableComponent";
 
 interface Service {
   _id: string;
@@ -74,6 +75,15 @@ const PostTable: React.FC = () => {
     navigate(`/editpost/${serviceId}`); // Navigate to edit page
   };
 
+
+  const columns = [
+    { field: 'images', headerName: 'Photo' },
+    { field: 'service_name', headerName: 'Service Name' },
+    { field: 'service_type.type_name', headerName: 'Service Type' },
+    { field: 'price', headerName: 'Price' },
+    { field: 'location', headerName: 'Location' },
+  ];
+
   return (
     <div className="overflow-x-auto p-4">
       <div className="mb-4">
@@ -84,50 +94,28 @@ const PostTable: React.FC = () => {
         </Link>
       </div>
 
-      <table className="min-w-full bg-white border border-gray-300 shadow-md">
-        <thead>
-          <tr className="bg-custom-gradient text-customGray font-serif">
-            <th className="py-2 px-4 border-b">Photo</th>
-            <th className="py-2 px-4 border-b">Service Name</th>
-            <th className="py-2 px-4 border-b">Service Type</th>
-            <th className="py-2 px-4 border-b">Price (INR)</th>
-            <th className="py-2 px-4 border-b">Location</th>
-            <th className="py-2 px-4 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {services.map((service) => (
-            <tr key={service._id} className="hover:bg-gray-100">
-              <td className="py-2 px-3 border-b">
-                <img
-                  src={service.images[0] || "https://via.placeholder.com/150"}
-                  alt={service.service_name}
-                  className="h-16 w-16 object-cover"
-                />
-              </td>
-              <td className="py-2 px-3 border-b">{service.service_name}</td>
-              <td className="py-2 px-3 border-b">{service.service_type?.type_name}</td>
-              <td className="py-2 px-3 border-b">{service.price}</td>
-              <td className="py-2 px-3 border-b">{service.location}</td>
-              <td className="py-2 px-3 border-b">
-                <button 
-                  className="mr-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  onClick={() => handleEdit(service._id)} // Edit button
-                >
-                  Edit
-                </button>
-                <button 
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                  onClick={() => handleDelete(service._id)} // Delete button
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TableComponent
+        columns={columns}
+        data={services}
+        actions={(service) => (
+          <>
+            <button
+              className="mr-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              onClick={() => handleEdit(service._id)}
+            >
+              Edit
+            </button>
+            <button
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              onClick={() => handleDelete(service._id)}
+            >
+              Delete
+            </button>
+          </>
+        )}
+      />
     </div>
+
   );
 };
 

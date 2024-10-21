@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import FormComponent from '../Common/FormComponent'; // Adjust the import path based on your directory structure
 
 interface BookingDetail {
   status: string;
@@ -9,16 +10,14 @@ interface BookingDetail {
   user_id: {
     name: string;
     email: string;
-    phone:number;
+    phone: number;
   };
   service_id: {
     service_name: string;
     price: number;
   };
   booking_date: string;
- 
 }
-
 
 const AdminBookingSingledetail: React.FC = () => {
   const { bookingId } = useParams<{ bookingId: string }>(); // Extract bookingId from the URL
@@ -63,85 +62,14 @@ const AdminBookingSingledetail: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">Booking Details</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-2 font-semibold">Service Name</label>
-            <input
-              type="text"
-              value={bookingDetails.service_id.service_name}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">Booked Date</label>
-            <input
-              type="text"
-              value={bookingDetails.booking_date}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">User Name</label>
-            <input
-              type="text"
-              value={bookingDetails.user_id.name}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">Email</label>
-            <input
-              type="email"
-              value={bookingDetails.user_id.email}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">Phone</label>
-            <input
-              type="text"
-              value={bookingDetails.user_id.phone}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">Payment</label>
-            <input
-              type="text"
-              value={bookingDetails.service_id.price}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">Status</label>
-            <input
-              type="text"
-              value={bookingDetails.status}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold">Payment ID</label>
-            <input
-              type="text"
-              value={bookingDetails.paymentIntentId}
-              disabled
-              className="border w-full p-2 rounded bg-gray-200"
-            />
-          </div>
+          <FormComponent label="Service Name" value={bookingDetails.service_id.service_name} disabled />
+          <FormComponent label="Booked Date" value={bookingDetails.booking_date} disabled />
+          <FormComponent label="User Name" value={bookingDetails.user_id.name} disabled />
+          <FormComponent label="Email" value={bookingDetails.user_id.email} disabled />
+          <FormComponent label="Phone" value={bookingDetails.user_id.phone} disabled />
+          <FormComponent label="Payment" value={bookingDetails.service_id.price} disabled />
+          <FormComponent label="Status" value={bookingDetails.status} disabled />
+          <FormComponent label="Payment ID" value={bookingDetails.paymentIntentId} disabled />
         </div>
       </div>
     </div>

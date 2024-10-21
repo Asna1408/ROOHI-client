@@ -14,7 +14,7 @@ function BookingByServicePage() {
           <UserSidebar />
         </div>
         <div className="w-3/4 p-6 overflow-y-auto"> {/* Main content area */}
-          <h2 className="text-2xl font-semibold font-serif text-customGray mb-4">My Posts</h2>
+          <h2 className="text-2xl font-semibold font-serif text-customGray mb-4">Booking Request</h2>
           <BookingDetailsByService/>
         </div>
       </div>

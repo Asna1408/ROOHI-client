@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import TableComponent from "../Common/TableComponent"; // Import your TableComponent
 
 interface Booking {
   _id: string;
@@ -25,10 +26,10 @@ const BookingList: React.FC = () => {
     // Fetch bookings from backend API
     const fetchBookings = async () => {
       try {
-        const response = await axios.get('/admin/bookdetails'); // Ensure the URL is correct
+        const response = await axios.get("/admin/bookdetails"); // Ensure the URL is correct
         setBookings(response.data);
       } catch (error) {
-        console.error('Error fetching bookings:', error);
+        console.error("Error fetching bookings:", error);
       } finally {
         setLoading(false);
       }
@@ -37,50 +38,42 @@ const BookingList: React.FC = () => {
     fetchBookings();
   }, []);
 
-  
-
   if (loading) {
     return <p>Loading...</p>;
   }
 
+  const columnsForBookings = [
+    { field: 'index', headerName: 'NO' },
+    { field: "user_id.name", headerName: "User Name" },
+    { field: "user_id.email", headerName: "Email" },
+    { field: "service_id.service_name", headerName: "Service" },
+    { field: "service_id.price", headerName: "Price (INR)" },
+    { field: "status", headerName: "Status" },
+  ];
+
+  const dataWithIndex = bookings.map((category, index) => ({
+    index: index + 1, // Serial number starting from 1
+    ...category,
+  }));
+
+
   return (
-    <div className="overflow-x-auto">
-      <h1 className="text-2xl font-serif text-customGray font-bold mb-6">Bookings</h1>
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr className="bg-custom-gradient">
-            <th className="py-2 px-4 text-left text-white font-bold">NO</th>
-            <th className="py-2 px-4 text-left text-white font-bold">USER NAME</th>
-            <th className="py-2 px-4 text-left text-white font-bold">EMAIL</th>
-            <th className="py-2 px-4 text-left text-white font-bold">SERVICE</th>
-            <th className="py-2 px-4 text-left text-white font-bold">PRICE</th>
-            <th className="py-2 px-4 text-left text-white font-bold">STATUS</th>
-            <th className="py-2 px-4 text-left text-white font-bold">VIEW</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bookings.map((booking, index) => (
-            <tr key={booking._id} className="bg-white-100">
-              <td className="py-2 px-4">{index + 1}</td>
-              <td className="py-2 px-4">{booking.user_id.name}</td>
-              <td className="py-2 px-4">{booking.user_id.email}</td>
-              <td className="py-2 px-4">{booking.service_id.service_name}</td>
-              <td className="py-2 px-4">${booking.service_id.price}</td>
-              <td className="py-2 px-4">${booking.status}</td>
-              <td className="py-2 px-4">
-                <span className="flex items-center">
-                <button
-                    onClick={() => navigate(`/Superadmin/BookingList/${booking._id}`)} // Navigate to the detailed page
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-opacity-75"
-                  >
-                    View
-                  </button>
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="overflow-x-auto p-4">
+      <h1 className="text-2xl font-serif text-customGray font-bold mb-6">
+        Bookings
+      </h1>
+      <TableComponent
+        columns={columnsForBookings}
+        data={dataWithIndex}
+        actions={(booking) => (
+          <button
+            onClick={() => navigate(`/Superadmin/BookingList/${booking._id}`)} // Navigate to the detailed page
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-opacity-75"
+          >
+            View
+          </button>
+        )}
+      />
     </div>
   );
 };

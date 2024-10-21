@@ -3,12 +3,12 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';  // Import SweetAlert
+import TableComponent from '../Common/TableComponent'; // Import your TableComponent
 
 interface ServiceCategory {
   _id: string;
   type_name: string;
   description: string;
-  image?: string;  // Assuming you may have an image for the service category
 }
 
 function ServiceList() {
@@ -64,6 +64,35 @@ function ServiceList() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  // Define columns for the TableComponent
+  const columns = [
+    { field: 'index', headerName: 'No' },
+    { field: 'type_name', headerName: 'Service Type' },
+    { field: 'description', headerName: 'Description' },
+    {
+      field: 'actions', 
+      headerName: '',
+      // Render action buttons in the table
+      render: (row: ServiceCategory) => (
+        <span className="flex items-center">
+          <Link to={`/Superadmin/EditServiceCategory/${row._id}`}>
+            <FaEdit className="text-blue-500 cursor-pointer mr-2" />
+          </Link>
+          <FaTrash
+            className="text-red-500 cursor-pointer"
+            onClick={() => handleDelete(row._id)}
+          />
+        </span>
+      )
+    },
+  ];
+
+  const dataWithIndex = serviceCategories.map((category, index) => ({
+    index: index + 1, // Serial number starting from 1
+    ...category,
+  }));
+
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -76,44 +105,17 @@ function ServiceList() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr className="bg-custom-gradient">
-              <th className="py-2 px-4 text-left text-white font-bold">NO</th>
-              {/* <th className="py-2 px-4 text-left text-white font-bold">IMAGE</th> */}
-              <th className="py-2 px-4 text-left text-white font-bold">SERVICE TYPE</th>
-              <th className="py-2 px-4 text-left text-white font-bold">DESCRIPTION</th>
-              <th className="py-2 px-4 text-left text-white font-bold">ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            {serviceCategories.length > 0 ? (
-              serviceCategories.map((category, index) => (
-                <tr key={category._id} className="bg-white-100">
-                  <td className="py-2 px-4">{index + 1}</td>
-                  
-                  <td className="py-2 px-4">{category.type_name}</td>
-                  <td className="py-2 px-4">{category.description}</td>
-                  <td className="py-2 px-4">
-                    <span className="flex items-center">
-                      <Link to={`/Superadmin/EditServiceCategory/${category._id}`}>
-                        <FaEdit className="text-blue-500 cursor-pointer mr-2" />
-                      </Link>
-                      <FaTrash
-                        className="text-red-500 cursor-pointer"
-                        onClick={() => handleDelete(category._id)}
-                      />
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="text-center py-4">No service categories found</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <TableComponent columns={columns} data={dataWithIndex} actions={(row) => (
+          <span className="flex items-center">
+            <Link to={`/Superadmin/EditServiceCategory/${row._id}`}>
+              <FaEdit className="text-blue-500 cursor-pointer mr-2" />
+            </Link>
+            <FaTrash
+              className="text-red-500 cursor-pointer"
+              onClick={() => handleDelete(row._id)}
+            />
+          </span>
+        )} />
       </div>
     </div>
   );

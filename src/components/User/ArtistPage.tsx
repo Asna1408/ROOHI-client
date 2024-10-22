@@ -84,7 +84,7 @@ const ArtistPage: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit review");
+        throw new Error("Failed to submit review , review cannot be submitted before service");
       }
 
       // Clear the form after successful submission
@@ -94,7 +94,7 @@ const ArtistPage: React.FC = () => {
       toast.success("Review submitted successfully!");
     } catch (err) {
       if (err instanceof Error) {
-       
+        toast.error(err.message);
       } else {
         setSubmitError("An unknown error occurred");
       }

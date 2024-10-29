@@ -19,12 +19,12 @@ const[password,setPassword] = useState<string>("")
 const [showPassword, setShowPassword] = useState(false); 
 const navigate = useNavigate();
 const dispatch = useDispatch();
-const { currentAdmin } = useSelector((state: any) => state.user);
+const { currentAdmin } = useSelector((state: any) => state.admin);
 
 
 useEffect(()=>{
     if(currentAdmin){
-      navigate('/Superadmin/dashboard');
+      navigate('/Superadmin/login');
     }
 },[])
 

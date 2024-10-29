@@ -31,6 +31,8 @@ import BookingByServicePage from "./pages/User/BookingByServicePage";
 import Bookeddetailpage from "./pages/User/Bookeddetailpage";
 import AdminBooking from "./pages/Admin/AdminBooking";
 import Adminbookingsingle from "./pages/Admin/Adminbookingsingle";
+import BookeddetailsServicePage from "./pages/User/BookeddetailsServicePage";
+import ChatAppPage from "./pages/User/ChatAppPage";
 
 
 
@@ -60,6 +62,9 @@ const App = () => {
                 <Route path='/bookingdetailsByUser' element={<BookingByUserPage />} />
                 <Route path='/bookingdetailsByProvider' element={<BookingByServicePage />} />
                 <Route path='/bookingdetail/:BookingId' element={<Bookeddetailpage />} />
+                <Route path='/bookingRequestdetail/:BookingId' element={<BookeddetailsServicePage />} />
+                <Route path='/chat' element={<ChatAppPage />} />
+
                 
 
                 

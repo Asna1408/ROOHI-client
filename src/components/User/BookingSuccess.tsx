@@ -1,38 +1,54 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const BookingSuccess = () => {
-  const [searchParams] = useSearchParams(); // Extract query parameters
+  const [searchParams] = useSearchParams(); 
   const [bookingDetails, setBookingDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const hasCalled = useRef(false);
 
   const sessionId = searchParams.get('session_id');
+  const serviceId = searchParams.get('service_id');  
+  const userId = searchParams.get('user_id');
+  const selectedDate = searchParams.get('selected_date');
 
   useEffect(() => {
     const fetchBookingDetails = async () => {
       if (sessionId) {
+        console.log(sessionId,"new session id")
+
+        if (hasCalled.current) {
+          return; // Prevents multiple calls
+        }
+        hasCalled.current = true;
+        
         try {
-          const response = await axios.get(`/user/booking/success/${sessionId}`); // Make API call to fetch booking details
-          setBookingDetails(response.data);
+
+const response = await axios.get(`/user/booking/success`,{
+  params: {session_id: sessionId,
+    service_id: serviceId,
+    user_id: userId,
+    selected_date: selectedDate }
+        });
+  setBookingDetails(response.data);
           setLoading(false);
         } catch (error) {
-
+          console.error("Error fetching booking details:", error);
+          toast.error("Failed to retrieve booking details");
           setLoading(false);
         }
+      }else{
+        toast.error("Session ID is missing in the URL")
       }
     };
     fetchBookingDetails();
-  }, [sessionId]);
+  }, [sessionId,serviceId,userId,selectedDate]);
 
   if (loading) {
     return <div className="text-center mt-20">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center mt-20 text-red-500">{error}</div>;
   }
 
   return (
@@ -62,3 +78,4 @@ const BookingSuccess = () => {
 };
 
 export default BookingSuccess;
+

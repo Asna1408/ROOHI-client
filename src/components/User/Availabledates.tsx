@@ -13,23 +13,20 @@ interface AvailableDatesProps {
 const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
   const [availableDates, setAvailableDates] = useState<string[]>([]); // Define the type for availableDates
   const [selectedDate, setSelectedDateState] = useState<string | null>(null); // Local state for selected date
-  const [bookedDates, setBookedDates] = useState<string[]>([]); 
 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Service ID:", serviceId);
     const fetchAvailableDates = async () => {
       try {
         const response = await axios.get(`/user/services/${serviceId}/availability`);
-        const { availableDates, bookedDates } = response.data;
+        const { availableDates} = response.data;
 
         console.log(response.data);
 
         setAvailableDates(availableDates);
-        setBookedDates(bookedDates);
       } catch (error) {
         toast.error("failed to fetch ")
         console.error('Error fetching availability:', error);
@@ -42,16 +39,14 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
 
   // Handle date selection
   const handleDateSelect = (date: string) => {
-    if (!bookedDates.includes(date)) {
       setSelectedDateState(date);
-    }
   };
 
   // Handle confirm date and navigation
   const handleConfirmDate = () => {
     if (selectedDate) {
       dispatch(setSelectedDate(selectedDate)); // Store the selected date in Redux
-      navigate(`/bookingform?serviceId=${serviceId}`); // Navigate to the booking form with serviceId
+      navigate(`/bookingform?serviceId=${serviceId}`); 
     } else {
       toast('Please select a date before confirming.');
     }
@@ -71,14 +66,11 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
                 <button
                   key={index}
                   className={`border px-4 py-2 ${
-                    bookedDates.includes(date) ? 'bg-red-500 cursor-not-allowed' : 
                     selectedDate === date ? 'bg-green-500' : 'bg-custom-gradient'
                   } text-white hover:bg-custom-gradient hover:text-white`}
                   onClick={() => handleDateSelect(date)}
-                  disabled={bookedDates.includes(date)}
-                   title={bookedDates.includes(date) ? format(new Date(date), 'dd MMM yyyy') : ''}
                 >
-                  {bookedDates.includes(date) ? 'Booked' : format(new Date(date), 'dd MMM yyyy')}
+                  { format(new Date(date), 'dd MMM yyyy')}
                 </button>
               ))}
             </div>

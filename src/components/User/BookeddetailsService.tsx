@@ -5,9 +5,9 @@ import axios from 'axios';
 import Swal from 'sweetalert2'; // Import Swal for confirmation dialoge
 import FormComponent from '../Common/FormComponent';
 
-const Bookeddetails: React.FC = () => {
+
+const BookeddetailsService: React.FC = () => {
   const location = useLocation();
-  const { currentUser } = useSelector((state: any) => state.user);
   const { BookingId } = useParams(); // Fetch BookingId from the route parameter
   const [bookingDetails, setBookingDetails] = useState<any>(null);
   const navigate = useNavigate();
@@ -74,9 +74,9 @@ const Bookeddetails: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormComponent label="Artist Name" value={bookingDetails.service_id.service_name} disabled />
             <FormComponent label="Selected Date" value={bookingDetails.booking_date} disabled />
-            <FormComponent label="Name" value={currentUser.name} disabled />
-            <FormComponent label="Contact No" value={currentUser.phone} disabled />
-            <FormComponent label="Email" value={currentUser.email} disabled />
+            <FormComponent label="Name" value={bookingDetails.user_id.name} disabled />
+            <FormComponent label="Contact No" value={bookingDetails.user_id.phone} disabled />
+            <FormComponent label="Email" value={bookingDetails.user_id.email} disabled />
             <FormComponent label="Payment" value={bookingDetails.service_id.price} disabled />
             <FormComponent label="Status" value={bookingDetails.status} disabled />
             <FormComponent label="Payment ID" value={bookingDetails.paymentIntentId} disabled />
@@ -102,4 +102,4 @@ const Bookeddetails: React.FC = () => {
   );
 };
 
-export default Bookeddetails;
+export default BookeddetailsService;

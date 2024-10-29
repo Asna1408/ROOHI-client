@@ -1,4 +1,4 @@
-import React, { useState } from 'react';  
+import React, { useEffect, useState } from 'react';  
     import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";  
     import { faUser } from '@fortawesome/free-solid-svg-icons';  
     import { faBars } from '@fortawesome/free-solid-svg-icons';  
@@ -8,6 +8,8 @@ import { signoutSuccess } from '../../redux/user/UserSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import io, { Socket } from "socket.io-client";
+
 
     const Header: React.FC = () => {  
         const navigate = useNavigate();
@@ -21,6 +23,17 @@ import Swal from 'sweetalert2';
         const toggleMenu = () => {  
             setIsMenuOpen(!isMenuOpen);  
         };  
+
+        // const socket: Socket = io('http://localhost:7000'); 
+
+        // useEffect(()=>{
+        //   socket.emit("join room", currentUser._id);
+
+        //   socket.on("join room", (data)=>{
+        //     console.log(data);
+        //     console.log("socket connected admin joined the room  📀🔥💕💕💕💕")
+        //   })
+        // })
 
 
         const handleSignout = async () => {

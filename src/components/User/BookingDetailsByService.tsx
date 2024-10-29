@@ -77,7 +77,7 @@ const BookingDetailsByService: React.FC = () => {
       actions={(booking) => (
         <button
           className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-          onClick={() => navigate(`/bookingdetail/${booking._id}`)}
+          onClick={() => navigate(`/bookingRequestdetail/${booking._id}`)}
         >
           View
         </button>

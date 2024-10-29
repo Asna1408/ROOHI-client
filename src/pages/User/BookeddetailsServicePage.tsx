@@ -1,17 +1,16 @@
 import React from 'react'
 import Header from '../../components/User/Header'
 import Footer from '../../components/User/Footer'
-import Bookeddetails from '../../components/User/Bookeddetails'
+import BookeddetailsService from '../../components/User/BookeddetailsService'
 
-const Bookeddetailpage = () => {
+const BookeddetailsServicePage = () => {
   return (
     <div>
       <Header/>
-      <Bookeddetails/>
-      
+      <BookeddetailsService/>
       <Footer/>
     </div>
   )
 }
 
-export default Bookeddetailpage
+export default BookeddetailsServicePage

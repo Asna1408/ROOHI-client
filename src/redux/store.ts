@@ -16,11 +16,13 @@ const persistReducerBooking = persistReducer(persistConfig,bookingReducer);
 
 
 
+
 export const store = configureStore({
     reducer: {
         user: persistReducerUser,
         admin:persistReducerAdmin,   
-        booking: persistReducerBooking, 
+        booking: persistReducerBooking,
+   
 
     },
     middleware: (getDefaultMiddleware)=>

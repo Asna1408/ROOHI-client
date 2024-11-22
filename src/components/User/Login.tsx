@@ -22,6 +22,7 @@ const [showPassword, setShowPassword] = useState(false);
 const navigate = useNavigate();
 const dispatch = useDispatch();
 const { currentUser } = useSelector((state: any) => state.user);
+console.log(currentUser,"Google user rrrrrrrrrrrrrrrrrr")
 
 
 useEffect(()=>{
@@ -29,6 +30,43 @@ useEffect(()=>{
       navigate('/');
     }
 },[])
+
+// const handleGoogleClick = async () => {
+//   try {
+//     const provider = new GoogleAuthProvider();
+//     provider.setCustomParameters({ prompt: "select_account" });
+
+//     const resultsFromGoogle = await signInWithPopup(auth, provider);
+//     const { displayName, email } = resultsFromGoogle.user;
+
+//     const res = await fetch("/user/googleAuth", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         name: displayName,
+//         email: email,
+//       }),
+//     });
+
+//     const data = await res.json();
+//     if (res.ok) {
+//       if (data.alreadyRegistered) {
+//         toast.success("User successfully logged in!");
+//         dispatch(signInSuccess(data));
+//         navigate("/"); // Navigate to the landing page
+//       } else {
+//         toast.error("Invalid credentials. User is not registered.");
+//       }
+//     } else {
+//       toast.error("An error occurred during login.");
+//     }
+//   } catch (error) {
+//     toast.error("An error occurred during Google authentication.");
+//     console.log(error);
+//   }
+// };
 
 const handleGoogleClick = async () => {
   try {
@@ -38,6 +76,7 @@ const handleGoogleClick = async () => {
     const resultsFromGoogle = await signInWithPopup(auth, provider);
     const { displayName, email } = resultsFromGoogle.user;
 
+    // Send the name and email to the backend
     const res = await fetch("/user/googleAuth", {
       method: "POST",
       headers: {
@@ -50,13 +89,24 @@ const handleGoogleClick = async () => {
     });
 
     const data = await res.json();
+    console.log(data,"userdataaaaaaaaaaaa")
+
     if (res.ok) {
       if (data.alreadyRegistered) {
+        
+        const {_id, name, email,phone } = data.existingUser;
+        console.log(name,"username")
         toast.success("User successfully logged in!");
-        dispatch(signInSuccess(data));
-        navigate("/"); // Navigate to the landing page
+        
+        // Dispatch user data to the Redux store
+        dispatch(signInSuccess({_id,name,email,phone}));
+        
+        navigate("/"); 
       } else {
-        toast.error("Invalid credentials. User is not registered.");
+        
+        toast.success("Account created successfully with Google!");
+        dispatch(signInSuccess(data)); // Dispatch the entire new user object
+        navigate("/");
       }
     } else {
       toast.error("An error occurred during login.");
@@ -66,6 +116,7 @@ const handleGoogleClick = async () => {
     console.log(error);
   }
 };
+
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();

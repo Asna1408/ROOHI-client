@@ -15,6 +15,13 @@ const BookingForm: React.FC = () => {
   const [service, setService] = useState<any>(null); 
   const [stripePromise] = useState(() => loadStripe('pk_test_51Q7VPGGWw2JRPJ2C46Z6Y0HaJDXkEAd0vriu3U4OU1HZs2cvcH4hhzsdbk9pPeoesJgMFUdkAUtJzsabxoJsRHhE00KCLyUpjO')); // Replace with your Stripe public key
 
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'No date selected';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB'); // Format as d/m/y (dd/mm/yyyy)
+  };
+
   useEffect(() => {
     const fetchServiceDetails = async () => {
       try {
@@ -31,6 +38,8 @@ const BookingForm: React.FC = () => {
       fetchServiceDetails();
     }
   }, [serviceId]);
+
+  console.log(serviceId,currentUser?._id,selectedDate, "All information passsed" )
 
   // Sample frontend code to handle booking
   const handleBooking = async () => {
@@ -79,6 +88,8 @@ const BookingForm: React.FC = () => {
     }
   };
 
+  const defaultPhone = "1234567890";
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4"> {/* Added flexbox properties and background */}
       <div className="w-full lg:w-1/2 border p-6 rounded-lg shadow-md space-y-4">
@@ -99,7 +110,7 @@ const BookingForm: React.FC = () => {
             <div>
               <label className="block mb-2 font-semibold">Selected Date</label>
               <input
-                value={selectedDate || 'No date selected'}
+                value={formatDate(selectedDate)}
                 disabled
                 className="border w-full p-2 rounded bg-gray-200"
               />
@@ -121,7 +132,7 @@ const BookingForm: React.FC = () => {
               <input
                 type="text"
                 name="contactNo"
-                value={currentUser.phone}
+                value={currentUser.phone || defaultPhone}
                 disabled
                 className="border w-full p-2 rounded bg-gray-200"
               />

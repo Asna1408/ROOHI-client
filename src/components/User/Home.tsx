@@ -1,23 +1,82 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faUsers, faReceipt, faDriversLicense } from "@fortawesome/free-solid-svg-icons";
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+
+interface Banner {
+  id: number;
+  title: string;
+  description: string;
+  images: string[];
+}
+
 
 const Home: React.FC = () => {
+
+  const [banners, setBanners] = useState<Banner[]>([]);
+
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const response = await fetch('/user/home-banners'); // Adjust the endpoint as necessary
+        if (response.ok) {
+          const data = await response.json();
+          setBanners(data);
+        } else {
+          console.error('Failed to fetch banners');
+        }
+      } catch (error) {
+        console.error('Error fetching banners:', error);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
 
   return (
     <div>
       <main>
-        <section className="bg-cover bg-center py-60" style={{ backgroundImage: "url('src/assets/user/banner/banner1.jpg')" }} >
+      <section>
+      <Carousel
+    showThumbs={false}
+    infiniteLoop={true}
+    autoPlay={true}
+    interval={5000}
+    stopOnHover={true}
+    showStatus={false}
+    showIndicators={true}
+  >
+    {banners.length > 0 ? (
+      // Wrap the mapped content in an array
+      banners.map((banner) => (
+        <div
+          key={banner.id}
+          className="bg-cover bg-center py-40"
+          style={{ backgroundImage: `url(${banner.images[0]})` }}
+        >
           <div className="container mx-20 text-left">
-            <p className="text-2xl py-2 italic font-serif mb-4">The Best for Bride</p>
+            <p className="text-2xl py-2 italic font-serif mb-4">{banner.title}</p>
             <h1 className="text-7xl font-semibold text-customGray font-serif mb-4 ">
-              <span>Plan And Book</span><br />
-              <span className="font-bold font-serif">Your Wedding</span>
+              {banner.description}
             </h1>
             <button className="border-2 border-customGold mt-4 text-customGray px-6 py-3 bg-transparent">
               Contact Us
             </button>
           </div>
+        </div>
+      ))
+    ) : (
+      // Wrap the fallback content in an array
+      [
+        <div key="fallback" className="text-center text-2xl text-customGray">
+          <p>No banners available at the moment.</p>
+        </div>,
+      ]
+    )}
+  </Carousel>
         </section>
         <section className="container mx-auto px-4 py-10">
           <div className="flex justify-center mb-4">

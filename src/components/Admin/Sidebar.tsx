@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaFlag className="mr-2 text-customGold" />
-        <Link to="/banner" className="hover:text-white">Banner</Link>
+        <Link to="/SuperAdmin/banner" className="hover:text-white">Banner</Link>
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaToolbox className="mr-2 text-customGold" />

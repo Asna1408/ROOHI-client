@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import oliveBranch from '../../assets/user/category/olive_branch.png'
 
 
 const ArtistPage: React.FC = () => {
@@ -14,12 +15,16 @@ const ArtistPage: React.FC = () => {
   const [review, setReview] = useState<string>(""); 
   const [submitError, setSubmitError] = useState<string>(""); 
   const [reviews, setReviews] = useState<any[]>([]);
+  const [bookingStatus, setBookingStatus] = useState<string | null>(null); // State for booking status
+
   const navigate = useNavigate()
   const { currentUser } = useSelector((state: any) => state.user);
 
 
 
+
   useEffect(() => {
+   
     const fetchService = async () => {
       try {
         const response = await fetch(`/user/servicedetails/${id}`); 
@@ -39,6 +44,8 @@ const ArtistPage: React.FC = () => {
       }
     };
 
+    
+
 
     const fetchReviews = async () => {
       try {
@@ -57,10 +64,28 @@ const ArtistPage: React.FC = () => {
       }
     };
 
+    const fetchBookingStatus = async () => {
+      try {
+        const response = await fetch(`/user/booking/${currentUser._id}/${id}/status`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch booking date");
+        }
+        const data = await response.json();
+        console.log(data,"booking status")
+        setBookingStatus(data.bookingStatus?.status || null);
+            } catch (err) {
+        console.error("Error fetching booking date", err);
+      }
+    };
+
+
     fetchService();
     fetchReviews();
-  }, [id]);
+    fetchBookingStatus();
+  }, [id,currentUser]);
 
+
+  
   
 
   const handleSubmitReview = async () => {
@@ -101,6 +126,40 @@ const ArtistPage: React.FC = () => {
     }
   };
 
+
+  const handleCreateConversation = async () => {
+    if (!currentUser) {
+      toast.error("Please sign in to start a conversation.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/user/create-conversation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          senderId: currentUser._id,
+          receiverId: service.provider_id, 
+        }),
+      });
+
+
+      if (!response.ok) {
+        throw new Error("Failed to start conversation");
+      }
+
+      const data = await response.json();
+   
+      console.log("conversationId",data.conversationId)
+      navigate('/chat');   
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "An unknown error occurred");
+    }
+  }
+
+ 
   const formatDate = (dateString: string | number | Date) => {
     const options: Intl.DateTimeFormatOptions = {
       day: '2-digit' as const,
@@ -121,19 +180,19 @@ const ArtistPage: React.FC = () => {
   
   const images = service.images || [];
 
+  // const canShowReviewSection = bookingDate && new Date(bookingDate) <= new Date();
+
   return (
+    <>
     <div className="flex flex-col md:flex-row gap-8 p-6 mt-7">
-      {/* Left Section: Images */}
       <div className="md:w-1/2">
         <div className="w-full flex justify-center">
           <img
-            src={images[0]} // Main product image
+            src={images[0]} 
             alt={service.service_name}
             className=" w-[436px] h-[436px] object-content"
           />
         </div>
-
-        {/* Thumbnails */}
         <div className="flex gap-2 mt-4 justify-center">
           {images.map((img: string, index: number) => (
             <img
@@ -147,59 +206,31 @@ const ArtistPage: React.FC = () => {
             />
           ))}
         </div>
-{/* Reviews Section */}
-<div className="mt-6">
-          <h2 className="font-bold text-lg font-serif text-customGray">Reviews</h2>
-          <div className="space-y-4">
-            {reviews && reviews.length > 0 ? (
-             reviews.map((review: any, index: number) => (
-                <div key={index} className="flex justify-between items-center bg-gray-100 p-4 rounded">
-                  <div>
-                    <p className="font-semibold">{review.user_id.name}</p>
-                    <p className="text-gray-600">{review.review}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <p className="font-semibold text-customGold mr-2">{review.rating}</p>
-                    <span className="text-customGold">★</span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No reviews yet.</p>
-            )}
-          </div>
-          {/* Review & Rating Section */}
-          
-        </div>
       </div>
-
-
-
-
-
 
       {/* Right Section: Product Details */}
       <div className="md:w-1/2 space-y-4">
       
         <div className="flex justify-center mb-4">
-            <img src="ROOHI-client-main\src\assets\user\category\olive_branch.png" alt="Decorative Design" className="w-16 h-auto" />
+            <img src={oliveBranch} alt="Decorative Design" className="w-16 h-auto" />
           </div>
         <h1 className="text-3xl text-customGray font-bold font-serif">{service.service_name}</h1>
-
-      
+        {service.provider_id && (
+          <a 
+            href={`/provider/${service.provider_id._id}`} 
+            className="text-3xl text-customGray font-bold font-serif"
+          >
+            {service.provider_id.name}
+          </a>
+        )}
         <div className="text-3xl font-semibold text-customGold font-serif">₹{service.price}</div>
-
-  
         <div className="text-gray-700 font-serif">
           <p>{service.description}</p>
         </div>
-
-      
         <div className="flex items-center gap-2 text-customGray font-serif">
   <FaMapMarkerAlt className="text-xl text-customGold" /> 
   <span className="text-customGray"> {service.location}</span>
 </div>
-      
         <div className="flex items-center gap-2 text-customGray font-serif">
   <FaCalendarAlt className="text-xl text-customGold" />
   <span className="text-customGray">
@@ -211,63 +242,102 @@ const ArtistPage: React.FC = () => {
             {index < service.availability.length - 1 ? ", " : ""}
           </span>
         ))
-      : "No dates available"}
-  </span>
+      : "No dates available"}  
+  </span>        
 </div>
-
-
-        
-        
-
-        
-        <div className="flex gap-4 mt-4">
+      <div className="flex gap-4 mt-4">
         <button
             className="mt-4 bg-custom-gradient text-white py-2 px-4"
             onClick={() => navigate(`/bookdate/${id}`)} 
           >
             Book Now
           </button>
-          <button  className="mt-4 bg-custom-gradient text-white py-2 px-4 ">
+
+{/* <button
+    className="mt-4 bg-custom-gradient text-white py-2 px-4"
+    onClick={() => navigate(`/bookdate/${id}`)}
+    disabled={service.provider_id._id === currentUser._id} // Disable button if provider is the current user
+  >
+    {service.provider_id._id === currentUser._id ? "You are the provider" : "Book Now"}
+  </button> */}
+{/* <button
+  className="mt-4 bg-custom-gradient text-white py-2 px-4"
+  onClick={() => navigate(`/bookdate/${id}`)}
+  disabled={service?.provider_id?._id === currentUser?._id} // Use optional chaining safely
+>
+  {service?.provider_id?._id === currentUser?._id ? "You are the provider" : "Book Now"}
+</button> */}
+
+
+
+          <button  className="mt-4 bg-custom-gradient text-white py-2 px-4 "
+          onClick={handleCreateConversation}>
              Send Message
           </button>
         </div>
-        <div className="mt-5">
-            <h2 className="font-bold text-lg mt-20 pt-20 pb-5 font-serif text-customGray">Review & Rating</h2>
-            <div className="bg-gray-100 p-4 rounded">
-              <div className="flex items-center space-x-2">
-                {/* Stars for rating */}
-                {[...Array(5)].map((_, i) => (
-                <span
-                  key={i}
-                  className={`cursor-pointer ${
-                    i < rating ? "text-customGold" : "text-gray-400"
-                  }`}
-                  onClick={() => setRating(i + 1)}
-                >
-                  ★
-                </span>
-              ))}
-              </div>
-              <textarea
-              placeholder="Share your experience about us"
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
-              className="mt-4 w-full p-2 bg-white border rounded"
-            />
-            {submitError && <p className="text-red-500 mt-2">{submitError}</p>}
-            <button
-              className="mt-4 bg-custom-gradient text-white py-2 px-4"
-              onClick={handleSubmitReview}
-            >
-              Submit
-            </button>
-            </div>
-          </div>
       </div>
-       
-
-      
     </div>
+    <div className="p-6 bg-white rounded-lg shadow-md">
+
+{/* Reviews Section */}
+<div className="mt-6">
+  <h2 className="font-bold text-lg font-serif text-customGray">Reviews</h2>
+  <div className="space-y-4">
+    {reviews && reviews.length > 0 ? (
+      reviews.map((review, index) => (
+        <div key={index} className="flex justify-between items-center bg-gray-100 p-4 rounded">
+          <div>
+            <p className="font-semibold">{review.user_id.name}</p>
+            <p className="text-gray-600">{review.review}</p>
+          </div>
+          <div className="flex items-center">
+            <p className="font-semibold text-customGold mr-2">{review.rating}</p>
+            <span className="text-customGold">★</span>
+          </div>
+        </div>
+      ))
+    ) : (
+      <p>No reviews yet.</p>
+    )}
+  </div>
+</div>
+
+{/* Review & Rating Section */}
+{bookingStatus === "completed" && (
+<div className="mt-10">
+  <h2 className="font-bold text-lg font-serif text-customGray">Review & Rating</h2>
+  <div className="bg-gray-100 p-4 rounded mt-4">
+    <div className="flex items-center space-x-2">
+      {/* Stars for rating */}
+      {[...Array(5)].map((_, i) => (
+        <span
+          key={i}
+          className={`cursor-pointer ${i < rating ? "text-customGold" : "text-gray-400"}`}
+          onClick={() => setRating(i + 1)}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+    <textarea
+      placeholder="Share your experience about us"
+      value={review}
+      onChange={(e) => setReview(e.target.value)}
+      className="mt-4 w-full p-2 bg-white border rounded"
+    />
+    {submitError && <p className="text-red-500 mt-2">{submitError}</p>}
+    <button
+      className="mt-4 bg-custom-gradient text-white py-2 px-4 rounded"
+      onClick={handleSubmitReview}
+    >
+      Submit
+    </button>
+  </div>
+</div>
+)}
+</div>
+
+     </>
   );
 };
 

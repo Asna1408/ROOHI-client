@@ -12,6 +12,12 @@ const Bookeddetails: React.FC = () => {
   const [bookingDetails, setBookingDetails] = useState<any>(null);
   const navigate = useNavigate();
 
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'No date available';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB'); // Format as d/m/y (dd/mm/yyyy)
+  };
+
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
@@ -73,7 +79,11 @@ const Bookeddetails: React.FC = () => {
         {bookingDetails ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormComponent label="Artist Name" value={bookingDetails.service_id.service_name} disabled />
-            <FormComponent label="Selected Date" value={bookingDetails.booking_date} disabled />
+            <FormComponent 
+              label="Selected Date" 
+              value={formatDate(bookingDetails.booking_date)} // Format the booking date
+              disabled 
+            />
             <FormComponent label="Name" value={currentUser.name} disabled />
             <FormComponent label="Contact No" value={currentUser.phone} disabled />
             <FormComponent label="Email" value={currentUser.email} disabled />

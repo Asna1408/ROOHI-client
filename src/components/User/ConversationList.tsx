@@ -46,9 +46,7 @@ const ConversationList: React.FC<ConversationListProps> = ({ setActiveChat, setA
         placeholder="Search for chats..."
         className="w-full p-2 mb-4 border border-gray-300 rounded-md"
       />
-      <button className="w-full bg-custom-gradient text-white p-2 rounded-md mb-4">
-        + Start New Chat
-      </button>
+    
       <div>
         {conversations.length > 0 ? (
           conversations.map((conv) => {

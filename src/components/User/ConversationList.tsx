@@ -41,11 +41,11 @@ const ConversationList: React.FC<ConversationListProps> = ({ setActiveChat, setA
   return (
     <div className="w-80 bg-gray-100 p-4 border-r border-gray-200">
       <h2 className="text-lg font-semibold mb-4">Messages</h2>
-      <input
+      {/* <input
         type="text"
         placeholder="Search for chats..."
         className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-      />
+      /> */}
     
       <div>
         {conversations.length > 0 ? (

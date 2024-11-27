@@ -8,7 +8,6 @@
 // import {faImage, faMicrophone } from '@fortawesome/free-solid-svg-icons';  
 // import InputEmoji from 'react-input-emoji';
 
-
 // interface MessageType {
 //   _id: string;
 //   conversationId: string;  
@@ -185,13 +184,20 @@
 //           {istyping ? <div className="pl-4 pb-2 text-gray-500">typing ...</div> : (<></>)} 
 //           <div className="p-4 border-t border-gray-200 flex items-center">
        
-//             <input
-//               type="text"
-//               value={inputValue}
-//               onChange={handleTyping}
-//               placeholder="Type a message..."
-//               className="flex-1 p-2 border border-gray-300 rounded-md mr-3"
-//             />
+//           <InputEmoji
+//                 value={inputValue}
+//                 onChange={setInputValue}
+//                 cleanOnEnter
+//                 placeholder="Type a message..."
+//                 onEnter={handleSend} shouldReturn={false} shouldConvertEmojiToImage={false} />
+//              {/* <input
+// //               type="text"
+// //               value={inputValue}
+// //               onChange={handleTyping}
+// //               placeholder="Type a message..."
+// //               className="flex-1 p-2 border border-gray-300 rounded-md mr-3"
+// //             /> */}
+
 //  {/* Hidden File Input */}
 //                         <input
 //                             type="file"
@@ -232,10 +238,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
-import { uploadImage } from '../../constant/CloudinaryService';
+import { uploadAudio, uploadImage } from '../../constant/CloudinaryService';
 import InputEmoji from 'react-input-emoji'; // Import the emoji input component
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";  
-import { faImage, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faMicrophone, faStop } from '@fortawesome/free-solid-svg-icons';
 import Message from './Message';
 
 interface MessageType {
@@ -243,7 +249,6 @@ interface MessageType {
   conversationId: string;  
   senderId: string;
   text: string;
-  imageUrl?: string;
   createdAt: string;
   updatedAt?: string;
 }
@@ -261,9 +266,15 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+
 
   const socket = io('http://localhost:7000');
 
@@ -312,6 +323,31 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
     scrollToBottom();
   }, [messages]);
 
+  const startRecording = async () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          setAudioBlob(event.data);
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+      recorderRef.current = recorder;
+    }
+  };
+
+  const stopRecording = () => {
+    if (recorderRef.current) {
+      recorderRef.current.stop();
+      recorderRef.current.stream.getTracks().forEach((track) => track.stop());
+      setIsRecording(false);
+    }
+  };
+
   const handleTyping = (e: { target: { value: React.SetStateAction<string> } }) => {
     const inputValue = e.target.value;
     setInputValue(inputValue);
@@ -344,16 +380,23 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
   };
 
   const handleSend = async () => {
-    if (inputValue.trim() || imageFile) {
+    if (inputValue.trim() || imageFile || audioBlob) {
       socket.emit('stop typing', conId);
       try {
         let imageUrl = '';
-        let audioUrl = '';
 
         if (imageFile) {
           imageUrl = await uploadImage(imageFile);
           setImageFile(null);
           setInputValue(imageUrl);
+        }
+
+        let audioUrl ='';
+        if(audioBlob){
+          const audioFile = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
+          audioUrl = await uploadAudio(audioFile);
+          setAudioBlob(null);
+          setInputValue(audioUrl);
         }
 
         if (inputValue !== '') {
@@ -401,7 +444,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
                 onChange={setInputValue}
                 cleanOnEnter
                 placeholder="Type a message..."
-                onEnter={handleSend} shouldReturn={false} shouldConvertEmojiToImage={false}              />
+                onEnter={handleSend} shouldReturn={false} shouldConvertEmojiToImage={false} />
                {/* <input
               type="text"
               value={inputValue}
@@ -420,9 +463,22 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
               <button onClick={openFilePicker} className="relative focus:outline-none pr-2">
                 <FontAwesomeIcon icon={faImage} className="h-4 w-4 text-customGold" />
               </button>
-              <button className="relative focus:outline-none pr-2">
+              {/* <button className="relative focus:outline-none pr-2">
                 <FontAwesomeIcon icon={faMicrophone} className="h-4 w-4 text-customGold" />
+              </button> */}
+              <button onClick={startRecording} className="relative focus:outline-none pr-2">
+                {!isRecording ? (
+                  <FontAwesomeIcon icon={faMicrophone} className="h-4 w-4 text-customGold" />
+                ) : (
+                  <FontAwesomeIcon icon={faStop} className="h-4 w-4 text-customGold" />
+                )}
               </button>
+
+              {isRecording && (
+                <button onClick={stopRecording} className="relative focus:outline-none pr-2">
+                  Stop
+                </button>
+              )}
 
               <button onClick={handleSend} className="text-white bg-custom-gradient p-2 rounded-full">
                 ➤
@@ -436,4 +492,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
 };
 
 export default MessageArea;
+
+
 

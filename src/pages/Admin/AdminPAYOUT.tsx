@@ -1,62 +1,96 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
-const PayoutForm = () => {
-    const [amount, setAmount] = useState('');
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
+const InitiatePayout: React.FC = () => {
+  const [formData, setFormData] = useState({
+    providerId: "",
+    stripeAccountId: "",
+    amount: 0,
+    currency: "usd",
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-    // Handle form submission
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-        const parsedAmount = parseFloat(amount);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-    // Check if the parsedAmount is a valid number
-    if (isNaN(parsedAmount) || parsedAmount <= 0) {
-        setError('Please enter a valid amount.');
-        return;
+    try {
+      const response = await axios.post("/admin/initiate-payout", formData);
+      setMessage(`Payout initiated successfully: ${response.data.transfer.id}`);
+    } catch (error: any) {
+      setMessage(`Failed to initiate payout: ${error.response?.data?.message || error.message}`);
     }
 
-        setLoading(true);
-        setError('');
-        setMessage('');
+    setLoading(false);
+  };
 
-        try {
-            // Replace with your API endpoint
-            const response = await axios.post('/admin/initiate-payout', { providerId: '66fb76ae5bbcfaf18ddb7ad1', amount });
-            setMessage(`Payout initiated. Payout ID: ${response.data.payoutId}`);
-        } catch (err) {
-            setError('Failed to initiate payout. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <div className="payout-form">
-            <h2>Request Payout</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="amount">Amount (USD):</label>
-                    <input
-                        type="number"
-                        id="amount"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        min="1"
-                    />
-                </div>
-
-                <button type="submit" disabled={loading}>Initiate Payout</button>
-
-                {loading && <p>Loading...</p>}
-                {error && <p className="error">{error}</p>}
-                {message && <p className="message">{message}</p>}
-            </form>
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Initiate Payout</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block font-medium">Service Provider ID</label>
+          <input
+            type="text"
+            name="providerId"
+            value={formData.providerId}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
         </div>
-    );
+        <div>
+          <label className="block font-medium">Stripe Account ID</label>
+          <input
+            type="text"
+            name="stripeAccountId"
+            value={formData.stripeAccountId}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block font-medium">Amount</label>
+          <input
+            type="number"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block font-medium">Currency</label>
+          <select
+            name="currency"
+            value={formData.currency}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          >
+            <option value="inr">INR</option>
+            
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          disabled={loading}
+        >
+          {loading ? "Processing..." : "Initiate Payout"}
+        </button>
+        {message && <p className="mt-4 text-sm">{message}</p>}
+      </form>
+    </div>
+  );
 };
 
-export default PayoutForm;
+export default InitiatePayout;

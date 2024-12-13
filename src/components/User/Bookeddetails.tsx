@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2'; // Import Swal for confirmation dialoge
+import Swal from 'sweetalert2'; 
 import FormComponent from '../Common/FormComponent';
 
 const Bookeddetails: React.FC = () => {
   const location = useLocation();
   const { currentUser } = useSelector((state: any) => state.user);
-  const { BookingId } = useParams(); // Fetch BookingId from the route parameter
+  const { BookingId } = useParams(); 
   const [bookingDetails, setBookingDetails] = useState<any>(null);
   const navigate = useNavigate();
+
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No date available';
@@ -52,7 +53,7 @@ const Bookeddetails: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          // Make a POST request to cancel the booking
+         
           const response = await axios.post(`/user/cancel/${BookingId}`, {
             BookingId,
           });
@@ -81,7 +82,7 @@ const Bookeddetails: React.FC = () => {
             <FormComponent label="Artist Name" value={bookingDetails.service_id.service_name} disabled />
             <FormComponent 
               label="Selected Date" 
-              value={formatDate(bookingDetails.booking_date)} // Format the booking date
+              value={formatDate(bookingDetails.booking_date)} 
               disabled 
             />
             <FormComponent label="Name" value={currentUser.name} disabled />
@@ -95,18 +96,22 @@ const Bookeddetails: React.FC = () => {
           <p>Loading service details...</p>
         )}
 
-        {bookingDetails && bookingDetails.status === 'canceled' ? (
-          <button className="bg-gray-400 text-white px-4 py-2 w-full mt-4" disabled>
-            Cancelled
-          </button>
-        ) : (
-          <button
-            className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"
-            onClick={handleCancelBooking} // Call handleCancelBooking on button click
-          >
-            Cancel Booking
-          </button>
-        )}
+{bookingDetails && bookingDetails.status === 'canceled' ? (
+  <button className="bg-gray-400 text-white px-4 py-2 w-full mt-4" disabled>
+    Cancelled
+  </button>
+) : bookingDetails?.status === 'completed' ? (
+  <button className="bg-green-500 text-white px-4 py-2 w-full mt-4" disabled>
+    Completed
+  </button>
+) : (
+  <button
+    className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"
+    onClick={handleCancelBooking} 
+  >
+    Cancel Booking
+  </button>
+)}
       </div>
     </div>
   );

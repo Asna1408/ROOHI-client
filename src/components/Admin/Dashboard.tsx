@@ -4,18 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { FaUsers, FaLaptop, FaMoneyBillWave } from 'react-icons/fa';  
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Line } from "recharts";
 
-
-
-
 const Dashboard = () => { 
   const [userCount, setUserCount] = useState(0);
 const [bookingCount, setBookingCount] = useState(0);
-const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [bookingStatusDistribution, setBookingStatusDistribution] = useState([]);
   const [revenueOverTime, setRevenueOverTime] = useState([]);
-  const [filter, setFilter] = useState("month"); // Default filter
-
-
+  const [filter, setFilter] = useState("month"); 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 

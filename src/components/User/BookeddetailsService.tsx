@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2'; // Import Swal for confirmation dialoge
+import Swal from 'sweetalert2'; 
 import FormComponent from '../Common/FormComponent';
 
 const BookeddetailsService: React.FC = () => {
   const location = useLocation();
-  const { BookingId } = useParams(); // Fetch BookingId from the route parameter
+  const { BookingId } = useParams(); 
   const [bookingDetails, setBookingDetails] = useState<any>(null);
   const navigate = useNavigate();
   const [status, setStatus] = useState<'pending' | 'confirmed' | 'canceled' | 'completed'>('pending');
@@ -42,7 +42,6 @@ const BookeddetailsService: React.FC = () => {
       return;
     }
 
-    // Confirm cancellation using Swal.fire
     Swal.fire({
       title: 'Are you sure?',
       text: "Do you want to cancel this booking?",
@@ -54,7 +53,7 @@ const BookeddetailsService: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          // Make a POST request to cancel the booking
+          
           const response = await axios.post(`/user/cancel/${BookingId}`, {
             BookingId,
           });
@@ -82,10 +81,9 @@ const BookeddetailsService: React.FC = () => {
     }
 
     try {
-      // Make a POST request to complete the booking
       const response = await axios.post(`/user/complete/${BookingId}`);
       if (response.status === 200) {
-        setStatus('completed'); // Update the status to 'completed'
+        setStatus('completed'); 
         Swal.fire('Completed!', 'Your booking has been marked as completed.', 'success');
       } else {
         Swal.fire('Error!', 'Failed to mark booking as completed.', 'error');
@@ -120,27 +118,6 @@ const BookeddetailsService: React.FC = () => {
           <p>Loading service details...</p>
         )}
 
-        {/* {bookingDetails && bookingDetails.status === 'canceled' ? (
-          <button className="bg-gray-400 text-white px-4 py-2 w-full mt-4" disabled>
-            Cancelled
-          </button>
-        ) : (
-          <>
-          <button
-            className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"
-            onClick={handleCancelBooking} // Call handleCancelBooking on button click
-          >
-            Cancel Booking
-          </button>
-          <button
-              className="bg-custom-gradient text-white px-4 py-2 hover:bg-green-600 w-full mt-4"
-              onClick={handleCompleteBooking }
-            >
-              Complete Booking
-            </button>
-          </>
-        )} */}
-
 {status === 'canceled' ? (
           <button className="bg-gray-400 text-white px-4 py-2 w-full mt-4" disabled>
             Cancelled
@@ -153,13 +130,13 @@ const BookeddetailsService: React.FC = () => {
           <>
             <button
               className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"
-              onClick={handleCancelBooking} // Call handleCancelBooking on button click
+              onClick={handleCancelBooking} 
             >
               Cancel Booking
             </button>
             <button
               className="bg-custom-gradient text-white px-4 py-2 hover:bg-green-600 w-full mt-4"
-              onClick={handleCompleteBooking} // Call handleCompleteBooking on button click
+              onClick={handleCompleteBooking} 
             >
               Complete Booking
             </button>

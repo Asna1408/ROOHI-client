@@ -31,6 +31,9 @@ useEffect(()=>{
     }
 },[])
 
+
+
+//new
 // const handleGoogleClick = async () => {
 //   try {
 //     const provider = new GoogleAuthProvider();
@@ -39,25 +42,29 @@ useEffect(()=>{
 //     const resultsFromGoogle = await signInWithPopup(auth, provider);
 //     const { displayName, email } = resultsFromGoogle.user;
 
-//     const res = await fetch("/user/googleAuth", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         name: displayName,
-//         email: email,
-//       }),
+//     // Send the name and email to the backend
+//     const response = await axios.post("/user/googleAuth", {
+//       name: displayName,
+//       email: email,
 //     });
 
-//     const data = await res.json();
-//     if (res.ok) {
+//     const data = response.data;
+//     console.log(data, "userdataaaaaaaaaaaa");
+
+//     if (response.status === 200) {
 //       if (data.alreadyRegistered) {
+//         const { _id, name, email, phone } = data.existingUser;
+//         console.log(name, "username");
 //         toast.success("User successfully logged in!");
-//         dispatch(signInSuccess(data));
-//         navigate("/"); // Navigate to the landing page
+
+//         // Dispatch user data to the Redux store
+//         dispatch(signInSuccess({ _id, name, email, phone }));
+
+//         navigate("/");
 //       } else {
-//         toast.error("Invalid credentials. User is not registered.");
+//         toast.success("Account created successfully with Google!");
+//         dispatch(signInSuccess(data)); // Dispatch the entire new user object
+//         navigate("/");
 //       }
 //     } else {
 //       toast.error("An error occurred during login.");
@@ -68,6 +75,7 @@ useEffect(()=>{
 //   }
 // };
 
+
 const handleGoogleClick = async () => {
   try {
     const provider = new GoogleAuthProvider();
@@ -76,44 +84,38 @@ const handleGoogleClick = async () => {
     const resultsFromGoogle = await signInWithPopup(auth, provider);
     const { displayName, email } = resultsFromGoogle.user;
 
-    // Send the name and email to the backend
-    const res = await fetch("/user/googleAuth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: displayName,
-        email: email,
-      }),
+    const response = await axios.post("/user/googleAuth", {
+      name: displayName,
+      email: email,
     });
 
-    const data = await res.json();
-    console.log(data,"userdataaaaaaaaaaaa")
+    const data = response.data;
+    console.log(data, "userdataaaaaaaaaaaa");
 
-    if (res.ok) {
+    if (response.status === 200) {
+      if (data.alreadyRegistered && data.existingUser.isBlocked) {
+        toast.error("Your account is blocked. Please contact support.");
+        navigate("/login"); 
+        return; 
+      }
+
       if (data.alreadyRegistered) {
-        
-        const {_id, name, email,phone } = data.existingUser;
-        console.log(name,"username")
+        const { _id, name, email, phone } = data.existingUser;
+        console.log(name, "username");
         toast.success("User successfully logged in!");
-        
-        // Dispatch user data to the Redux store
-        dispatch(signInSuccess({_id,name,email,phone}));
-        
+        dispatch(signInSuccess({ _id, name, email, phone }));
         navigate("/"); 
       } else {
-        
         toast.success("Account created successfully with Google!");
-        dispatch(signInSuccess(data)); // Dispatch the entire new user object
-        navigate("/");
+        dispatch(signInSuccess(data)); 
+        navigate("/"); 
       }
     } else {
       toast.error("An error occurred during login.");
     }
   } catch (error) {
     toast.error("An error occurred during Google authentication.");
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -130,7 +132,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     return;
   }
 
-  // Password Validation
   if (!password) {
     toast.error(VALIDATION_MESSAGES.PASSWORD.REQUIRED);
     return;

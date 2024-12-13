@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {  FaHome, FaUsers, FaCalendarAlt,  FaFlag, FaToolbox , FaCalendarCheck} from 'react-icons/fa';
 
-// Define the props type
 interface SidebarProps {
   isOpen: boolean;
 }
@@ -41,10 +40,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         <Link to="/Superadmin/BookingList" className="hover:text-white">Booking</Link>
       </li>
       
-      <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
+      {/* <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaCalendarAlt className="mr-2 text-customGold" />
-        <Link to="/calendar" className="hover:text-white">Calendar</Link>
-      </li>
+        <Link to="/Superadmin/PayoutList" className="hover:text-white">Payout</Link>
+      </li> */}
     </ul>
   
     </div>

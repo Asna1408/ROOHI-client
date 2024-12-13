@@ -38,17 +38,15 @@ import Banner from "./pages/Admin/Banner";
 import AddBannerForm from "./pages/Admin/AddBannerForm";
 import EditBannerPage from "./pages/Admin/EditBannerPage";
 import AdminPayout from "./pages/Admin/AdminPAYOUT";
-
-
-
-
+import EditProfilePage from "./pages/User/EditProfilePage";
+import ProtectUser from "./components/User/ProtectUser";
 
 const App = () => {
   return (
     <>
     <ToastContainer />
     <Router>
-    <Routes>
+          <Routes>
                 //user routes
                 <Route path='/' element={<Homepage />} />
                 <Route path='/register' element={<Registerpage />} />
@@ -57,10 +55,13 @@ const App = () => {
                 <Route path='/forget_password' element={<Forgetpage />} />
                 <Route path='/reset_password' element={<Resetpage />} />
                 <Route path='/services' element={<Servicepage />} />
+                <Route path='/artist/:id' element={<Artist />} />
                 <Route path="/provider/:providerId" element={<ServiceProviderPage />} />
 
+
+            <Route element={<ProtectUser />}>
                 <Route path='/profile' element={<Profilepage />} />
-                <Route path='/artist/:id' element={<Artist />} />
+                <Route path="/editProfile/:userId" element={<EditProfilePage />} />
                 <Route path='/post' element={<PostTablepage />} />
                 <Route path='/addpost' element={<PostPage />} />
                 <Route path='/editpost/:postId' element={<EditPostPage />} />
@@ -72,35 +73,24 @@ const App = () => {
                 <Route path='/bookingdetail/:BookingId' element={<Bookeddetailpage />} />
                 <Route path='/bookingRequestdetail/:BookingId' element={<BookeddetailsServicePage />} />
                 <Route path='/chat' element={<ChatAppPage />} />
-
-
-                
-
-                
-
-             
-             
-              
-                
+            </Route>
 
                 //admin routes
                 <Route path="/Superadmin/login" element={<AdminLogin />} />
-               
-                <Route path="/Superadmin/dashboard" element={<AdminDashboard />} />
-                <Route path="/Superadmin/UserList" element={<AdminUser />} />
-                <Route path="/Superadmin/ServiceList" element={<AdminService/>} />
-                <Route path="/Superadmin/AddServiceCategory" element={<AddServiceCategory/>} />
-                <Route path="/Superadmin/EditServiceCategory/:id" element={<EditServiceCategory />} />
-                <Route path="/Superadmin/BookingList" element={<AdminBooking />} />
-                <Route path="/Superadmin/BookingList/:bookingId" element={<Adminbookingsingle />} />
-                <Route path="/Superadmin/banner" element={<Banner />} />
-                <Route path="/Superadmin/banner/AddBanner" element={<AddBannerForm />} />
-                <Route path='/Superadmin/banner/:BannerId' element={<EditBannerPage />} />
-                <Route path='/Superadmin/Payout' element={<AdminPayout/>} />
-
-
-
-            </Routes>
+                <Route element={<AdminPrivateRoute />}>
+                   <Route path="/Superadmin/dashboard" element={<AdminDashboard />} />
+                   <Route path="/Superadmin/UserList" element={<AdminUser />} />
+                   <Route path="/Superadmin/ServiceList" element={<AdminService/>} />
+                   <Route path="/Superadmin/AddServiceCategory" element={<AddServiceCategory/>} />
+                   <Route path="/Superadmin/EditServiceCategory/:id" element={<EditServiceCategory />} />
+                   <Route path="/Superadmin/BookingList" element={<AdminBooking />} />
+                   <Route path="/Superadmin/BookingList/:bookingId" element={<Adminbookingsingle />} />
+                   <Route path="/Superadmin/banner" element={<Banner />} />
+                   <Route path="/Superadmin/banner/AddBanner" element={<AddBannerForm />} />
+                   <Route path='/Superadmin/banner/:BannerId' element={<EditBannerPage />} />
+                   <Route path='/Superadmin/Payout' element={<AdminPayout/>} />
+                </Route>
+          </Routes>
     </Router>
     </>
   );

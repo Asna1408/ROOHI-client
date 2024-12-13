@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const AddServiceCategory: React.FC = () => {
-  const [typeName, setTypeName] = useState('');  // State for type_name
-  const [description, setDescription] = useState('');  // State for description
-  const [loading, setLoading] = useState(false);  // State to handle loading
+  const [typeName, setTypeName] = useState('');  
+  const [description, setDescription] = useState('');  
+  const [loading, setLoading] = useState(false);  
   const [existingTypes, setExistingTypes] = useState<string[]>([]); 
   const navigate = useNavigate()
 

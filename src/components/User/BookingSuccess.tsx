@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect,useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 
@@ -52,17 +52,14 @@ const response = await axios.get(`/user/booking/success`,{
   }
 
   return (
-    <div className="flex items-center justify-center p-10 mt-5 mb-5"> {/* Added flexbox properties and background */}
+    <div className="flex items-center justify-center p-10 mt-5 mb-5"> 
       <div className="w-full lg:w-1/2 border p-6 rounded-lg shadow-md space-y-4">
         <h1 className="text-2xl font-bold mb-4 flex item-center justify-center font-serif text-customGray">BOOKED SUCCESSFULLY</h1>
         <div className=" p-6 rounded-lg mt-6 text-center">
           <p className="text-xl text-customGray font-serif mb-4">THANK YOU FOR BOOKING</p>
           <div className='flex justify-center space-x-4'>
-            <button
-              className="bg-custom-gradient text-white  px-4 py-2 text-lg "
-
-            >
-              CONTINUE BOOKING
+            <button className="bg-custom-gradient text-white px-4 py-2 text-lg">
+                <Link to="/services" className="text-white">CONTINUE BOOKING</Link>
             </button>
             {/* <button
                     className="bg-custom-gradient text-white  px-4 py-2 text-lg"

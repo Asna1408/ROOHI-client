@@ -1,20 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom"; // If you're using React Router
+import { Link } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+
 
 const Profile = () => {
 
   const currentUser = useSelector((state: any) => state.user.currentUser);
+  const navigate = useNavigate();
   console.log('CurrentUser:',currentUser)
+
+
+  const handleEdit = () => {
+    navigate(`/editProfile/${currentUser._id}`); 
+  };
+
   
   return (
-  
-    
    
-      <div className="container mx-auto p-6 flex flex-col md:flex-row gap-6 mt-10 mb-10">
-        {/* Sidebar */}
-        
-
+      <div className="container mx-auto  flex flex-col md:flex-row gap-6 mt-10 mb-10">
         {/* Profile Edit Section */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-lg">
          
@@ -42,8 +46,8 @@ const Profile = () => {
 
           {/* Edit and Change Password Buttons */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            <button className="bg-custom-gradient text-white py-2 px-4 lg">Edit</button>
-            <button className="bg-custom-gradient text-white py-2 px-4 lg">Change Password</button>
+            <button onClick={handleEdit} className="bg-custom-gradient text-white py-2 px-4 lg">Edit</button>
+            {/* <button className="bg-custom-gradient text-white py-2 px-4 lg">Change Password</button> */}
           </div>
         </section>
       </div>

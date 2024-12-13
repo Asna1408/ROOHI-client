@@ -1,9 +1,11 @@
-// ConversationList.tsx
-import axios from 'axios';
+
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-interface User {
+ interface User {
   _id: string;
   name: string;
   avatar?: string;
@@ -15,15 +17,28 @@ interface Conversation {
   lastMessage?: string;
 }
 
-interface ConversationListProps {
-  setActiveChat: (chatName: string) => void;
-  setActiveChatId: (chatId: string) => void;
-  setConId: (conId: string) => void;
-}
 
-const ConversationList: React.FC<ConversationListProps> = ({ setActiveChat, setActiveChatId , setConId}) => {
+const socket = io('http://localhost:7000');
+
+
+const ConversationList = () => {
   const { currentUser } = useSelector((state: any) => state.user);
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Connect to socket and emit user ID
+    socket.emit("user-connected", currentUser._id);
+
+    // Listen for online status updates
+    socket.on("update-online-status", (onlineUserIds: string[]) => {
+      setOnlineUsers(onlineUserIds);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [currentUser]);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -31,48 +46,72 @@ const ConversationList: React.FC<ConversationListProps> = ({ setActiveChat, setA
         const response = await axios.get(`/user/get-user-conversations/${currentUser._id}`);
         setConversations(response.data);
       } catch (error) {
-        console.error("Failed to fetch conversations", error);
+        console.error('Failed to fetch conversations', error);
       }
     };
 
-    fetchConversations();
+    fetchConversations();    
+
+
   }, [currentUser]);
+const navigate = useNavigate();
+
+const handleNavigate = (conId: string, provId: string, name: string)=>{
+  navigate(`/chat?conId=${conId}&providerId=${provId}&providerName=${name}`);
+}
+  
 
   return (
     <div className="w-80 bg-gray-100 p-4 border-r border-gray-200">
       <h2 className="text-lg font-semibold mb-4">Messages</h2>
-      {/* <input
-        type="text"
-        placeholder="Search for chats..."
-        className="w-full p-2 mb-4 border border-gray-300 rounded-md"
-      /> */}
-    
       <div>
         {conversations.length > 0 ? (
           conversations.map((conv) => {
-            // Get the conversation partner's data (exclude current user)
             const partner = conv.members.find((member) => member._id !== currentUser._id);
+            const isOnline = onlineUsers.includes(partner?._id || "");
 
             return (
               <div
                 key={conv._id}
                 onClick={() => {
-                    setActiveChat(partner ? partner.name : "Unknown User")
-                    setActiveChatId(partner ? partner._id : "Unknown User")
-                    setConId(conv._id);
+                  handleNavigate(conv._id, partner?._id ?? '', partner?.name ?? '');
+
                 }}
                 className="flex items-center p-2 cursor-pointer rounded-md hover:bg-gray-200"
               >
-                <div className="w-10 h-10 bg-gray-300 rounded-full mr-3">
+                {/* Avatar with online indicator */}
+                <div className="relative w-10 h-10 bg-gray-300 rounded-full mr-3 flex items-center justify-center">
                   {partner?.avatar ? (
-                    <img src={partner.avatar} alt={`${partner.name}'s avatar`} className="rounded-full" />
+                    <img
+                      src={partner.avatar}
+                      alt={`${partner.name}'s avatar`}
+                      className="rounded-full w-full h-full object-cover"
+                    />
                   ) : (
-                    <span>{partner?.name?.charAt(0).toUpperCase()}</span>
+                    <span className="text-lg font-bold text-gray-700">
+                      {partner?.name?.charAt(0).toUpperCase()}
+                    </span>
                   )}
+                  
+               
+                    <div
+                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                      isOnline ? "bg-green-500" : "bg-gray-400"
+                    }`}
+                  ></div>
                 </div>
+
+                {/* Conversation details */}
                 <div>
-                  <p className="font-semibold">{partner?.name || "Unknown User"}</p>
-                  <p className="text-sm text-gray-600">{conv.lastMessage || "No messages yet"}</p>
+                  <p className="font-semibold">{partner?.name || 'Unknown User'}</p>
+                  <p className="text-sm text-gray-600">
+                    {conv.lastMessage || 'No messages yet'}
+                  </p>
+                  
+                  <p className={`text-xs ${isOnline ? "text-green-500" : "text-gray-500"}`}>
+                    {isOnline ? "Online" : "Offline"}
+                  </p>
+
                 </div>
               </div>
             );

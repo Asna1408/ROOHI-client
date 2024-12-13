@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import FormComponent from '../Common/FormComponent'; // Adjust the import path based on your directory structure
+import FormComponent from '../Common/FormComponent'; 
 
 interface BookingDetail {
   status: string;
@@ -20,7 +20,7 @@ interface BookingDetail {
 }
 
 const AdminBookingSingledetail: React.FC = () => {
-  const { bookingId } = useParams<{ bookingId: string }>(); // Extract bookingId from the URL
+  const { bookingId } = useParams<{ bookingId: string }>(); 
   const [bookingDetails, setBookingDetails] = useState<BookingDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,6 +71,16 @@ const AdminBookingSingledetail: React.FC = () => {
           <FormComponent label="Status" value={bookingDetails.status} disabled />
           <FormComponent label="Payment ID" value={bookingDetails.paymentIntentId} disabled />
         </div>
+
+       
+        {/* <button
+          className="px-4 py-2 bg-custom-gradient text-white rounded-md"
+        >
+           <Link to="/Superadmin/Payout">
+          Initiate Payout
+          </Link>
+
+        </button> */}
       </div>
     </div>
   );

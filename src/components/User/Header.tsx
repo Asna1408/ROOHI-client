@@ -35,7 +35,7 @@ import { toast, Toaster } from 'react-hot-toast';
 
           socket.on("join room", (data)=>{
             console.log(data);
-            console.log("socket connected admin joined the room  📀🔥💕💕💕💕")
+            console.log("socket connected admin joined the room ")
           })
       
           socket.on('notify', (id)=>{
@@ -58,30 +58,6 @@ import { toast, Toaster } from 'react-hot-toast';
           };}
         }, [socket]);
 
-
-      //   useEffect(() => {
-      //     if (currentUser) {
-      //         // Join a socket room with current user's ID when they are logged in
-      //         socket.emit("join room", currentUser._id);
-  
-      //         socket.on('notify', (id) => {
-      //             console.log("Notification received:", id);
-      //             toast('New Message', {
-      //                 icon: '📩',
-      //                 style: {
-      //                     borderRadius: '10px',
-      //                     background: '#333',
-      //                     color: '#fff',
-      //                 },
-      //             });
-      //         });
-      //     }
-  
-      //     // Clean up on dismount
-      //     return () => {
-      //         socket.disconnect();
-      //     };
-      // }, [currentUser]);
 
 
         const handleSignout = async () => {
@@ -162,10 +138,7 @@ import { toast, Toaster } from 'react-hot-toast';
                           <FontAwesomeIcon icon={faUser} className="h-3 w-3 text-customGold" />
                           <span className="text-sm font-bold text-customGold font-serif">{currentUser.name}</span>
                         </a> 
-                        {/* <button className="relative focus:outline-none">
-                           <FontAwesomeIcon icon={faBell} className="h-4 w-4 text-customGold" />
-                                 <span className="absolute top-0 right-0 block h-2 w-2 bg-red-600 rounded-full"></span>
-                        </button> */}
+                        
 
                         <button   className="whitespace-nowrap bg-custom-gradient hover:from-yellow-500 hover:to-orange-500 text-white font-bold py-2 px-4 font-serif"
                             onClick={handleSignout}

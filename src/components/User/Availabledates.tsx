@@ -3,17 +3,16 @@ import { format } from 'date-fns';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setSelectedDate } from "../../redux/user/BookingSlice"; // Import Redux action
+import { setSelectedDate } from "../../redux/user/BookingSlice"; 
 import { toast } from 'react-toastify';
 
 interface AvailableDatesProps {
-  serviceId: string; // Define the type for serviceId
+  serviceId: string; 
 }
 
 const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
-  const [availableDates, setAvailableDates] = useState<string[]>([]); // Define the type for availableDates
-  const [selectedDate, setSelectedDateState] = useState<string | null>(null); // Local state for selected date
-
+  const [availableDates, setAvailableDates] = useState<string[]>([]); 
+  const [selectedDate, setSelectedDateState] = useState<string | null>(null); 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,7 +41,7 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
       setSelectedDateState(date);
   };
 
-  // Handle confirm date and navigation
+  
   const handleConfirmDate = () => {
     if (selectedDate) {
       dispatch(setSelectedDate(selectedDate)); // Store the selected date in Redux

@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faUsers, faReceipt, faDriversLicense } from "@fortawesome/free-solid-svg-icons";
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import axios from "axios";
 
 interface Banner {
-  id: number;
+  _id: number;
   title: string;
   description: string;
   images: string[];
@@ -16,25 +17,19 @@ const Home: React.FC = () => {
 
   const [banners, setBanners] = useState<Banner[]>([]);
 
-
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await fetch('/user/home-banners'); // Adjust the endpoint as necessary
-        if (response.ok) {
-          const data = await response.json();
-          setBanners(data);
-        } else {
-          console.error('Failed to fetch banners');
-        }
+        const response = await axios.get('/user/home-banners'); 
+        setBanners(response.data); 
       } catch (error) {
         console.error('Error fetching banners:', error);
       }
     };
-
+  
     fetchBanners();
   }, []);
-
+  
 
   return (
     <div>
@@ -51,9 +46,9 @@ const Home: React.FC = () => {
   >
     {banners.length > 0 ? (
       // Wrap the mapped content in an array
-      banners.map((banner) => (
+      banners.map((banner, i) => (
         <div
-          key={banner.id}
+          key={banner._id}
           className="bg-cover bg-center py-40"
           style={{ backgroundImage: `url(${banner.images[0]})` }}
         >
@@ -69,7 +64,7 @@ const Home: React.FC = () => {
         </div>
       ))
     ) : (
-      // Wrap the fallback content in an array
+      
       [
         <div key="fallback" className="text-center text-2xl text-customGray">
           <p>No banners available at the moment.</p>

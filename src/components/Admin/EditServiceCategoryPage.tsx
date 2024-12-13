@@ -13,8 +13,6 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); 
 
-
-  // Fetch the existing category details on component mount
   useEffect(() => {
     const fetchCategory = async () => {
       try {

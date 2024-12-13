@@ -11,7 +11,7 @@ const Otp: React.FC = () => {
   
   const navigate = useNavigate();
 
-  // Countdown timer for resending OTP
+  
   useEffect(() => {
     if (seconds > 0) {
       const timer = setTimeout(() => setSeconds(seconds - 1), 1000);
@@ -22,7 +22,7 @@ const Otp: React.FC = () => {
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const emailFromUrl = query.get('email');
-    console.log("Extracted email:", emailFromUrl); // Debug log to see the extracted email
+    console.log("Extracted email:", emailFromUrl); 
 
     setEmail(emailFromUrl);
   }, [location]);
@@ -80,14 +80,13 @@ const Otp: React.FC = () => {
     }
 
     try {
-      console.log("Sending email to backend:", email); // Log to ensure email is being passed correctly
-
+      console.log("Sending email to backend:", email); 
 
       const res = await axios.post('/user/resendOtp', { email });
 
       if (res.data.success) {
         toast.success('OTP resent successfully.');
-        setSeconds(30); // Reset timer after resending
+        setSeconds(30); 
       } else {
         toast.error(res.data.message || 'Error resending OTP.');
       }

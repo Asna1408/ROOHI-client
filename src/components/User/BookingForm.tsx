@@ -25,7 +25,7 @@ const BookingForm: React.FC = () => {
   useEffect(() => {
     const fetchServiceDetails = async () => {
       try {
-        console.log("Fetching service with ID:", serviceId); 
+       
         const response = await axios.get(`/user/servicedetails/${serviceId}`);
         console.log("Service details fetched:", response.data); // Debugging
         setService(response.data);
@@ -41,47 +41,33 @@ const BookingForm: React.FC = () => {
 
   console.log(serviceId,currentUser?._id,selectedDate, "All information passsed" )
 
-  // Sample frontend code to handle booking
   const handleBooking = async () => {
     if (!serviceId || !currentUser?._id || !selectedDate) {
       console.error('Missing required booking information');
       return;
     }
-
+  
     const amount = service.price * 100; // Amount in cents (e.g., service price in INR converted to cents)
     const currency = 'inr'; // Currency, you can change as per requirement
-
+  
     try {
-      const response = await fetch('/user/booknowcheckout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          serviceId,
-          userId: currentUser._id,
-          selectedDate,
-          amount,
-          currency,
-        }),
+      const response = await axios.post('/user/booknowcheckout', {
+        serviceId,
+        userId: currentUser._id,
+        selectedDate,
+        amount,
+        currency,
       });
-
-      if (!response.ok) {
-        // Handle error
-        const error = await response.json();
-        console.error('Error creating booking:', error);
-        return;
-      }
-
-      const { sessionId } = await response.json();
+  
+      const { sessionId } = response.data;
+  
       const stripe = await stripePromise; 
-
-    
+  
       if (!stripe) {
         console.error('Stripe.js has not loaded yet.');
         return;
       }
-
+  
       await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
       console.error('Error during booking process:', error);
@@ -91,7 +77,7 @@ const BookingForm: React.FC = () => {
   const defaultPhone = "1234567890";
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4"> {/* Added flexbox properties and background */}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4"> 
       <div className="w-full lg:w-1/2 border p-6 rounded-lg shadow-md space-y-4">
         <h1 className="text-2xl font-bold mb-4 flex item-center justify-center">Booking Form</h1>
 
@@ -166,7 +152,7 @@ const BookingForm: React.FC = () => {
 
         <button
           className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"
-          onClick={handleBooking} // Calling the handleBooking function on button click
+          onClick={handleBooking} 
         >
           CONFIRM PAYMENT
         </button>

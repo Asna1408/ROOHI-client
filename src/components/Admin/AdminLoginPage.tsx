@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {REGEX,VALIDATION_MESSAGES} from '../../constant/validation'
-import { signInSuccess } from "../../redux/user/UserSlice";
+import { signInSuccess } from '../../redux/admin/AdminSlice';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 
@@ -72,17 +72,11 @@ const handleSubmit = async (e: React.FormEvent) => {
 }
 
 } catch (err) {
- console.log(err) 
-   
-}
-  
+ console.log(err)   
+  }
 };
 
   return (
- 
- 
-
-
  <>
  <div className="bg-white py-10 px-4 shadow-lg ">
       <div className="flex justify-between items-center">
@@ -98,11 +92,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     <div className="flex items-center justify-center pt-10 bg-white">
         <div className="bg-white p-8 rounded-lg w-[400px]">
           <h1 className="text-2xl font-semibold font-serif text-center text-customGray">Login</h1>
-
-
-         
-
-
           {/* Login Form */}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -144,8 +133,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             >
               LOGIN
             </button>
-
-
           </form>
         </div>
       </div></>

@@ -1,248 +1,13 @@
-// import React, { useEffect, useState, useRef } from 'react';
-// import axios from 'axios';
-// import Message from './Message';
-// import { useSelector } from 'react-redux';
-// import { io } from 'socket.io-client';
-// import { uploadImage } from '../../constant/CloudinaryService';
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";  
-// import {faImage, faMicrophone } from '@fortawesome/free-solid-svg-icons';  
-// import InputEmoji from 'react-input-emoji';
-
-// interface MessageType {
-//   _id: string;
-//   conversationId: string;  
-//   senderId: string;
-//   text: string;
-//   imageUrl?: string;
-//   createdAt: string;
-//   updatedAt?: string;
-// }
-
-// interface MessageAreaProps {
-//   activeChatId: string | null;
-//   conId: string;
-//   name: string;
-// }
-
-// const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) => {
-//   const { currentUser } = useSelector((state: any) => state.user);
-//   const [messages, setMessages] = useState<MessageType[]>([]);
-//   const [inputValue, setInputValue] = useState('');
-//   const messageEndRef = useRef<HTMLDivElement | null>(null);
-//   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-//   const [typing,setTyping] = useState(false)
-//   const [istyping,setisTyping] = useState(false)
-//   const [imageFile, setImageFile] = useState<File | null>(null);
-
-
-//   const socket = io('http://localhost:7000');
-
-//   const fetchMessages = async () => {
-//     try {
-//       const res = await axios.get(`/user/get-messages/${conId}`);
-//       setMessages(res.data);
-//     } catch (error) {
-//       console.error("Failed to fetch messages:", error);
-//     }
-//   };
-
-//   const scrollToBottom = () => {
-//     if (messageEndRef.current) {
-//       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
-//     }
-//   };
-
-//   useEffect(() => {
-//     socket.emit('join room', conId);
-//     socket.on('join room', (data) => {
-//       console.log("Joined room:", data);
-//     });
-
-//     socket.on('send-message', (data) => {
-//       if (data === conId) {
-//         fetchMessages();
-//       }
-//     });
-
-//     socket.on("typing" , () => setisTyping(true))
-//     socket.on("stop typing" , () => setisTyping(false))
-
-
-//     return () => {
-//       socket.disconnect();
-//     };
-//   }, [conId, socket]);
-
-//   useEffect(() => {
-//     if (activeChatId !== 'null' && conId !== 'null' && name !== null) 
-//       fetchMessages();
-//   }, [conId]);
-
-//   useEffect(() => {
-//     scrollToBottom();
-//   }, [messages]);
-
-//   const handleTyping = (e: { target: { value: React.SetStateAction<string> } }) => {
-//     const inputValue = e.target.value;
-//     setInputValue(inputValue);
-  
-//     if (inputValue === '') {
-//       if (typing) {
-//         socket.emit("stop typing", conId);
-//         setTyping(false);
-//       }
-//       return;
-//     }
-  
-//     if (!typing) {
-//       setTyping(true);
-//       socket.emit("typing", conId);
-//     }
-  
-//     let lastTypingTime = new Date().getTime();
-//     const timeLength = 3000;
-  
-//     setTimeout(() => {
-//       const timenow = new Date().getTime();
-//       const timeDiff = timenow - lastTypingTime;
-  
-//       if (timeDiff >= timeLength && typing) {
-//         socket.emit("stop typing", conId);
-//         setTyping(false);
-//       }
-//     }, timeLength);
-//   };
-
-
-//   const handleSend = async () => {
-//     if (inputValue.trim() ||  imageFile) {
-//       socket.emit('stop typing', conId)
-//       try {
-
-// let imageUrl ='';
-// let audioUrl ='';
-
-// if(imageFile) {
-//   imageUrl = await uploadImage(imageFile);
-//   setImageFile(null);
-//   setInputValue(imageUrl)
-// console.log(imageUrl + "👍👍👍👍👍")
-// console.log(inputValue + "👍👍👍👍👍 😂😂😂")
-// }
-// console.log(imageUrl)
-
-//      if(inputValue !== ''){
-//       const newMessage = { conversationId: conId, senderId: currentUser._id, text: inputValue,imageUrl,audioUrl };
-//       console.log(newMessage)
-//       const res = await axios.post('/user/send-message', newMessage);
-//       socket.emit('notify', activeChatId);
-//       socket.emit('send-message', conId);
-//       setMessages([...messages, res.data]);
-//       setInputValue('');
-//      }
-//       } catch (error) {
-//         console.error("Failed to send message:", error);
-//       }
-//     }
-//   };
-
-//   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (e.target.files && e.target.files[0]) {
-//         setImageFile(e.target.files[0]); // Store the image file to send later
-//     }
-// };
-
-
-// const openFilePicker = () => {
-//   if (fileInputRef.current) {
-//       fileInputRef.current.click();
-//   }
-// };
-
-//   return (
-//     <div className="flex flex-col h-full">
-//       {activeChatId !== 'null' && conId !== 'null' && name !== null && (
-//         <>
-//           <div
-//             className="flex-1 overflow-y-auto p-4 space-y-3"
-//             style={{ maxHeight: '80vh', scrollbarWidth: 'none', msOverflowStyle: 'none' }} // For Firefox
-//           >
-//             <style>
-//               {`
-//                 .hide-scrollbar::-webkit-scrollbar {
-//                   display: none;
-//                 }
-//               `}
-//             </style>
-//             {messages.map((message) => (
-//               <Message key={message._id} message={message} />
-//             ))}
-//             <div ref={messageEndRef} />
-//           </div>
-//           <div className="flex flex-col ">
-//           {istyping ? <div className="pl-4 pb-2 text-gray-500">typing ...</div> : (<></>)} 
-//           <div className="p-4 border-t border-gray-200 flex items-center">
-       
-//           <InputEmoji
-//                 value={inputValue}
-//                 onChange={setInputValue}
-//                 cleanOnEnter
-//                 placeholder="Type a message..."
-//                 onEnter={handleSend} shouldReturn={false} shouldConvertEmojiToImage={false} />
-//              {/* <input
-// //               type="text"
-// //               value={inputValue}
-// //               onChange={handleTyping}
-// //               placeholder="Type a message..."
-// //               className="flex-1 p-2 border border-gray-300 rounded-md mr-3"
-// //             /> */}
-
-//  {/* Hidden File Input */}
-//                         <input
-//                             type="file"
-//                             accept="image/*"
-//                             onChange={handleImageChange}
-//                             ref={fileInputRef}
-//                             style={{ display: 'none' }}
-//                         />
-
-//                         {/* <button onClick={openFilePicker} className="mr-3 text-gray-500 hover:text-gray-700">
-//                             📎 
-//                         </button> */}
-
-//                         <button onClick={openFilePicker} className="relative focus:outline-none pr-2">
-//                            <FontAwesomeIcon icon={faImage} className="h-4 w-4 text-customGold" />
-                               
-//                         </button>
-//                         <button  className="relative focus:outline-none pr-2">
-//                            <FontAwesomeIcon icon={faMicrophone} className="h-4 w-4 text-customGold" />
-                               
-//                         </button>
-//             <button  onClick={handleSend} className="text-white bg-custom-gradient p-2 rounded-full">
-//               ➤
-//             </button>
-           
-
-//           </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default MessageArea;
-
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { uploadAudio, uploadImage } from '../../constant/CloudinaryService';
-import InputEmoji from 'react-input-emoji'; // Import the emoji input component
+import InputEmoji from 'react-input-emoji'; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";  
 import { faImage, faMicrophone, faStop } from '@fortawesome/free-solid-svg-icons';
 import Message from './Message';
+import { useLocation } from 'react-router-dom';
 
 interface MessageType {
   _id: string;
@@ -253,19 +18,13 @@ interface MessageType {
   updatedAt?: string;
 }
 
-interface MessageAreaProps {
-  activeChatId: string | null;
-  conId: string;
-  name: string;
-}
 
-const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) => {
+const MessageArea = () => {
   const { currentUser } = useSelector((state: any) => state.user);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [inputValue, setInputValue] = useState('');
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
 
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -274,13 +33,40 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
+  
+  const [chatId, setChatId] = useState<string>();
+  const [provId, setProvId] = useState<string>();
+  const [userName, setUserName] = useState<string>()
 
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+
+  const conversationId = query.get('conId') ?? '';
+  const providerId = query.get('providerId') ?? '';
+  const providerName = query.get('providerName') ?? '';
+
+  useEffect(() => {
+ 
+     
+        setChatId(conversationId);
+        setProvId(providerId);
+        setUserName(providerName);
+    
+  
+  }, [conversationId, providerName, providerId]);
+
+  // Log the updated state after useEffect runs
+  useEffect(() => {
+    console.log('Updated Values:', provId, chatId, userName);
+  }, [provId, chatId, userName]); // Log whenever state changes
+
+  console.log("👍👍👍👍👍👍👍👍👍👍👍", provId, chatId, userName);
 
   const socket = io('http://localhost:7000');
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get(`/user/get-messages/${conId}`);
+      const res = await axios.get(`/user/get-messages/${chatId}`);
       setMessages(res.data);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
@@ -294,13 +80,13 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
   };
 
   useEffect(() => {
-    socket.emit('join room', conId);
+    socket.emit('join room', chatId);
     socket.on('join room', (data) => {
       console.log("Joined room:", data);
     });
 
     socket.on('send-message', (data) => {
-      if (data === conId) {
+      if (data === chatId) {
         fetchMessages();
       }
     });
@@ -311,13 +97,15 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
     return () => {
       socket.disconnect();
     };
-  }, [conId, socket]);
+  }, [chatId, socket]);
 
   useEffect(() => {
-    if (activeChatId !== 'null' && conId !== 'null' && name !== null) {
+    if (provId && chatId && userName) {
       fetchMessages();
     }
-  }, [conId]);
+  }, [chatId]);
+
+  
 
   useEffect(() => {
     scrollToBottom();
@@ -354,7 +142,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
 
     if (inputValue === '') {
       if (typing) {
-        socket.emit('stop typing', conId);
+        socket.emit('stop typing', chatId);
         setTyping(false);
       }
       return;
@@ -362,7 +150,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
 
     if (!typing) {
       setTyping(true);
-      socket.emit('typing', conId);
+      socket.emit('typing', chatId);
     }
 
     let lastTypingTime = new Date().getTime();
@@ -373,7 +161,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
       const timeDiff = timenow - lastTypingTime;
 
       if (timeDiff >= timeLength && typing) {
-        socket.emit('stop typing', conId);
+        socket.emit('stop typing', chatId);
         setTyping(false);
       }
     }, timeLength);
@@ -381,7 +169,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
 
   const handleSend = async () => {
     if (inputValue.trim() || imageFile || audioBlob) {
-      socket.emit('stop typing', conId);
+      socket.emit('stop typing', chatId);
       try {
         let imageUrl = '';
 
@@ -400,10 +188,10 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
         }
 
         if (inputValue !== '') {
-          const newMessage = { conversationId: conId, senderId: currentUser._id, text: inputValue, imageUrl, audioUrl };
+          const newMessage = { conversationId: chatId, senderId: currentUser._id, text: inputValue, imageUrl, audioUrl };
           const res = await axios.post('/user/send-message', newMessage);
-          socket.emit('notify', activeChatId);
-          socket.emit('send-message', conId);
+          socket.emit('notify', provId);
+          socket.emit('send-message', chatId);
           setMessages([...messages, res.data]);
           setInputValue('');
         }
@@ -427,7 +215,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
 
   return (
     <div className="flex flex-col h-full">
-      {activeChatId !== 'null' && conId !== 'null' && name !== null && (
+      {provId && chatId  && userName  && (
         <>
           <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ maxHeight: '80vh' }}>
             {messages.map((message) => (
@@ -437,21 +225,17 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
           </div>
 
           <div className="flex flex-col ">
-            {isTyping && <div className="pl-4 pb-2 text-gray-500">typing ...</div>}
+            {/* {isTyping && <div className="pl-4 pb-2 text-gray-500">typing ...</div>} */}
             <div className="p-4 border-t border-gray-200 flex items-center">
-              <InputEmoji
-                value={inputValue}
-                onChange={setInputValue}
-                cleanOnEnter
-                placeholder="Type a message..."
-                onEnter={handleSend} shouldReturn={false} shouldConvertEmojiToImage={false} />
-               {/* <input
-              type="text"
-              value={inputValue}
-              onChange={handleTyping}
-              placeholder="Type a message..."
-              className="flex-1 p-2 border border-gray-300 rounded-md mr-3"
-            /> */}
+            <InputEmoji
+  value={inputValue}
+  onChange={setInputValue}  // Ensure real-time updates to inputValue
+  cleanOnEnter
+  placeholder="Type a message..."
+  onEnter={handleSend}
+  shouldReturn={false}
+  shouldConvertEmojiToImage={false}
+/>
               <input
                 type="file"
                 accept="image/*"
@@ -463,9 +247,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
               <button onClick={openFilePicker} className="relative focus:outline-none pr-2">
                 <FontAwesomeIcon icon={faImage} className="h-4 w-4 text-customGold" />
               </button>
-              {/* <button className="relative focus:outline-none pr-2">
-                <FontAwesomeIcon icon={faMicrophone} className="h-4 w-4 text-customGold" />
-              </button> */}
               <button onClick={startRecording} className="relative focus:outline-none pr-2">
                 {!isRecording ? (
                   <FontAwesomeIcon icon={faMicrophone} className="h-4 w-4 text-customGold" />
@@ -492,6 +273,4 @@ const MessageArea: React.FC<MessageAreaProps> = ({ activeChatId, conId, name }) 
 };
 
 export default MessageArea;
-
-
 

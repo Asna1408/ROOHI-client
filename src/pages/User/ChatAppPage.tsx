@@ -1,26 +1,38 @@
 // ChatApp.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ConversationList from '../../components/User/ConversationList';
 import MessageArea from '../../components/User/MessageArea';
 import Header from '../../components/User/Header';
 import Footer from '../../components/User/Footer';
+import { useLocation } from 'react-router-dom';
 
 const ChatApp: React.FC = () => {
-  const [activeChat, setActiveChat] = useState<string>('null');
-  const [activeChatId, setActiveChatId] = useState<string>("null")
-  const [conId, setConId] = useState<string>("null")
-  console.log(activeChat, activeChatId, conId);
+  const [userName, setUserName] = useState<string>()
+
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+
+  const providerName = query.get('providerName') ?? '';
+
+  useEffect(() => {
+ 
+        setUserName(providerName);
+    
+  
+  }, [providerName]);
+
+  console.log("provider name in chat header ")
 
   return (
 <>
 <Header />
     <div className="flex h-screen">
-      <ConversationList setActiveChat={setActiveChat} setActiveChatId={setActiveChatId} setConId={setConId}/>
+      <ConversationList />
       <div className="flex-1 flex flex-col">
         <div className="p-4 border-b border-gray-200 text-lg font-semibold">
-          {activeChat}
+          {userName}
         </div>
-        <MessageArea name={activeChat} activeChatId={activeChatId} conId={conId}  />
+        <MessageArea    />
       </div>
     </div>
     <Footer />

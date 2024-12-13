@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { uploadImage } from "../../constant/CloudinaryService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface ServiceCategory {
   _id?: string;
@@ -28,33 +29,41 @@ const EditPost = () => {
     price: ''
   });
 
-  // Fetch Service Categories
+  
+
   useEffect(() => {
+    
+  
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/admin/serviceList');
-        if (!response.ok) {
-          throw new Error('Failed to fetch service categories');
+        const response = await axios.get('/admin/serviceList');
+  
+        if (response.data && Array.isArray(response.data.categories)) {
+          setServiceCategories(response.data.categories); 
+        } else {
+          console.error('Unexpected response structure:', response.data);
+          setServiceCategories([]); 
         }
-        const data = await response.json();
-        setServiceCategories(data);
       } catch (error) {
         console.error('Error fetching service categories:', error);
-        toast.error('Error fetching service categories');
+        setServiceCategories([]); 
       }
-    }
+    };
+
     fetchCategories();
-  }, []); // Ensure this effect runs only once when the component mounts
+  }, []);
 
   // Fetch Service Data for Edit
   useEffect(() => {
+    
     const fetchServiceData = async () => {
       if (postId) {
         try {
-          const response = await fetch(`/user/editpost/${postId}`);
           console.log(`Fetching service data from: /user/editpost/${postId}`);
-          if (response.ok) {
-            const data = await response.json();
+          const response = await axios.get(`/user/editpost/${postId}`);
+    
+          if (response.status === 200) {
+            const data = response.data;
             setServiceData(data);
             setAvailability(data.availability.map((dateStr: string) => new Date(dateStr)) || []);
             setImagePreviews(data.images || []);
@@ -68,9 +77,10 @@ const EditPost = () => {
         }
       }
     };
+    
 
     fetchServiceData();
-  }, [postId]); // Dependency array ensures it runs only when postId changes
+  }, [postId]); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -95,11 +105,9 @@ const EditPost = () => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
 
-      // Create previews for the selected images
       const newImagePreviews = filesArray.map(file => URL.createObjectURL(file));
       setImagePreviews(prev => [...prev, ...newImagePreviews]);
 
-      // Store the files for future uploading
       setImageFiles(prevFiles => [...prevFiles, ...filesArray]);
     }
   };
@@ -152,33 +160,35 @@ const EditPost = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!validateFields()) {
       return;
     }
-
+  
     try {
+      
       const uploadPromises = imageFiles.map(file => uploadImage(file));
       const imageUrls = await Promise.all(uploadPromises);
-
+  
+      
       const updatedService = {
         ...serviceData,
         availability,
         images: imageUrls,
       };
-
-      const response = await fetch(`/user/editpost/${postId}`, {
-        method: 'PUT',
+  
+      
+      const response = await axios.put(`/user/editpost/${postId}`, updatedService, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedService),
       });
-
-      if (response.ok) {
+  
+      if (response.status === 200) {
         toast.success('Service updated successfully');
         navigate("/post");
       } else {
+        console.error('Failed to update service:', response.data);
         toast.error('Failed to update service');
       }
     } catch (error) {
@@ -186,6 +196,7 @@ const EditPost = () => {
       toast.error('Error updating service');
     }
   };
+  
 
   return (
     <div className="container mx-auto p-6 flex flex-col md:flex-row gap-6 mb-10 mt-10">
@@ -304,8 +315,6 @@ const EditPost = () => {
 </div>
 </div>
 </div>
-
-
 
           <div className="flex justify-center mt-6">
             <button type="submit" className="bg-customGold text-white py-2 px-4 rounded-lg">Update Service</button>

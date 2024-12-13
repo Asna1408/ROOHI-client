@@ -4,6 +4,7 @@ import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import oliveBranch from '../../assets/user/category/olive_branch.png'
+import axios from "axios";
 
 
 const ArtistPage: React.FC = () => {
@@ -24,60 +25,47 @@ const ArtistPage: React.FC = () => {
 
 
   useEffect(() => {
-   
+
+
     const fetchService = async () => {
       try {
-        const response = await fetch(`/user/servicedetails/${id}`); 
-        if (!response.ok) {
-          throw new Error("Service not found");
-        }
-        const data = await response.json();
-        setService(data);
+        const response = await axios.get(`/user/servicedetails/${id}`);
+        setService(response.data);
       } catch (err) {
-        if (err instanceof Error) {
-         console.log(err)
+        if (axios.isAxiosError(err)) {
+          setError(err.response?.data.message || 'Service not found');
         } else {
-          setError("An unknown error occurred");
+          setError('An unknown error occurred');
         }
       } finally {
         setLoading(false);
       }
     };
 
-    
-
 
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`/user/service/${id}/reviews`); // Fetch reviews for the service
-        if (!response.ok) {
-          throw new Error("Failed to fetch reviews");
-        }
-        const data = await response.json();
-        setReviews(data); // Update state with reviews
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
+        const response = await axios.get(`/user/service/${id}/reviews`);
+        setReviews(response.data);
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          setError(err.response?.data.message || 'Failed to fetch reviews');
         } else {
-          setError("An unknown error occurred");
+          setError('An unknown error occurred');
         }
       }
     };
+
 
     const fetchBookingStatus = async () => {
       try {
-        const response = await fetch(`/user/booking/${currentUser._id}/${id}/status`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch booking date");
-        }
-        const data = await response.json();
-        console.log(data,"booking status")
-        setBookingStatus(data.bookingStatus?.status || null);
-            } catch (err) {
-        console.error("Error fetching booking date", err);
+        const response = await axios.get(`/user/booking/${currentUser._id}/${id}/status`);
+        console.log(response.data, 'booking status');
+        setBookingStatus(response.data.bookingStatus?.status || null);
+      } catch (err) {
+        console.error('Error fetching booking date', err);
       }
     };
-
 
     fetchService();
     fetchReviews();
@@ -102,7 +90,7 @@ const ArtistPage: React.FC = () => {
         },
         body: JSON.stringify({
           user_id:currentUser._id,
-          service_id: id, // assuming the service ID is needed for the review
+          service_id: id, 
           rating,
           review,
         }),
@@ -126,13 +114,12 @@ const ArtistPage: React.FC = () => {
     }
   };
 
-
   const handleCreateConversation = async () => {
     if (!currentUser) {
       toast.error("Please sign in to start a conversation.");
       return;
     }
-
+  
     try {
       const response = await fetch('/user/create-conversation', {
         method: 'POST',
@@ -144,21 +131,22 @@ const ArtistPage: React.FC = () => {
           receiverId: service.provider_id, 
         }),
       });
-
-
+  
       if (!response.ok) {
         throw new Error("Failed to start conversation");
       }
-
+  
       const data = await response.json();
-   
-      console.log("conversationId",data.conversationId)
-      navigate('/chat');   
+      console.log("conversationId", data._id);
+  
+      if (data._id) {
+        navigate(`/chat?conId=${data._id}&providerId=${service.provider_id._id}&providerName=${service.provider_id.name}`);
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "An unknown error occurred");
     }
-  }
-
+  };
+  
  
   const formatDate = (dateString: string | number | Date) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -252,24 +240,6 @@ const ArtistPage: React.FC = () => {
           >
             Book Now
           </button>
-
-{/* <button
-    className="mt-4 bg-custom-gradient text-white py-2 px-4"
-    onClick={() => navigate(`/bookdate/${id}`)}
-    disabled={service.provider_id._id === currentUser._id} // Disable button if provider is the current user
-  >
-    {service.provider_id._id === currentUser._id ? "You are the provider" : "Book Now"}
-  </button> */}
-{/* <button
-  className="mt-4 bg-custom-gradient text-white py-2 px-4"
-  onClick={() => navigate(`/bookdate/${id}`)}
-  disabled={service?.provider_id?._id === currentUser?._id} // Use optional chaining safely
->
-  {service?.provider_id?._id === currentUser?._id ? "You are the provider" : "Book Now"}
-</button> */}
-
-
-
           <button  className="mt-4 bg-custom-gradient text-white py-2 px-4 "
           onClick={handleCreateConversation}>
              Send Message

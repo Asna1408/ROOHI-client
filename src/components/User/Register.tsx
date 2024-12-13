@@ -14,7 +14,7 @@ import { auth } from '../../firebase/firebase';
 type UserType = {
   name: string;
   email: string;
-  phone: string; // Keeping this as string for simplicity of validation/input
+  phone: string; 
   password: string;
   rePassword: string;
 };
@@ -35,43 +35,41 @@ const Register: React.FC = () => {
 
   console.log(formData)
 
+  
+
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
-
+  
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const { displayName, email } = resultsFromGoogle.user;
-
-      const res = await fetch("/user/googleAuth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: displayName,
-          email: email,
-        }),
+  
+      // Send the name and email to the backend using Axios
+      const response = await axios.post("/user/googleAuth", {
+        name: displayName,
+        email: email,
       });
-
-      const data = await res.json();
-      if (res.ok) {
+  
+      const data = response.data;
+  
+      if (response.status === 200) {
         if (data.alreadyRegistered) {
           toast.info("User is already registered. You can log in using the login page.");
         } else {
           toast.success("User successfully registered and logged in!");
           dispatch(signInSuccess(data));
-          navigate("/"); // Navigate to the landing page
+          navigate("/"); 
         }
       } else {
         toast.error("An error occurred during registration.");
       }
     } catch (error) {
       toast.error("An error occurred during Google authentication.");
-      console.log(error);
+      console.error("Error during Google authentication:", error);
     }
   };
-
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

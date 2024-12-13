@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../constant/CloudinaryService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface ServiceCategory {
   _id?: string;
@@ -27,18 +28,30 @@ const Post = () => {
     price: ''
   });
 
+  
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/admin/serviceList'); 
-        const data = await response.json();
-        setServiceCategories(data); // Store the categories in state
+        const response = await axios.get('/admin/serviceList');
+  
+        if (response.data && Array.isArray(response.data.categories)) {
+          setServiceCategories(response.data.categories); 
+        } else {
+          console.error('Unexpected response structure:', response.data);
+          setServiceCategories([]); 
+        }
       } catch (error) {
         console.error('Error fetching service categories:', error);
+        setServiceCategories([]); 
       }
     };
+  
     fetchCategories();
   }, []);
+  
+  
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -66,7 +79,7 @@ const Post = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
-      setImageFiles(prevFiles => [...prevFiles, ...filesArray]); // Add new images to the state
+      setImageFiles(prevFiles => [...prevFiles, ...filesArray]); 
     }
   };
 
@@ -107,46 +120,44 @@ const Post = () => {
     return true;
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!validateFields()) {
-      return; 
+      return;
     }
-
+  
     try {
-      // Upload all images and collect their URLs
       const uploadPromises = imageFiles.map(file => uploadImage(file));
       const imageUrls = await Promise.all(uploadPromises);
-      
+  
       const newService = {
         ...serviceData,
         availability,
-        images: imageUrls, 
+        images: imageUrls,
       };
-
-      // Make a POST request to your backend API to save the service
-      const response = await fetch('/user/uploadpost', {
-        method: 'POST',
+  
+      const response = await axios.post('/user/uploadpost', newService, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newService),
       });
-
-      if (response.ok) {
+  
+      if (response.status === 200 || response.status === 201) {
         toast.success('Service added successfully');
-        console.log("service added")
-        navigate("/post")
+        console.log("Service added");
+        navigate("/post");
       } else {
-        console.log("failed to add service")
+        console.error('Failed to add service:', response.data);
         toast.error('Failed to add service');
       }
     } catch (error) {
       console.error('Error adding service:', error);
+      toast.error('Error adding service');
     }
   };
-
+  
   
 
   return (
@@ -179,11 +190,15 @@ const Post = () => {
   className="mt-1 block w-full p-2 border border-customGold"
 >
   <option value="" disabled>Select Service Type</option>
+  
   {serviceCategories.map(category => (
     <option key={category._id} value={category._id}> 
       {category.type_name}
     </option>
-  ))}
+  ))
+}
+
+
 </select>
 
 
@@ -260,7 +275,7 @@ const Post = () => {
             <label className="block text-sm font-medium text-gray-700">Images</label>
             <div className="mt-1 flex items-center justify-center w-full">
               <label className="cursor-pointer bg-gray-100 rounded-lg p-6 border border-customGold text-red-500">
-                <input type="file" className="hidden" multiple onChange={handleImageChange} /> {/* Allow multiple files */}
+                <input type="file" className="hidden" multiple onChange={handleImageChange} /> 
                 <span className="text-center">+</span>
               </label>
             </div>

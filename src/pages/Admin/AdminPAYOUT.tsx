@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import AdminFooter from "../../components/Admin/AdminFooter";
+import Sidebar from "../../components/Admin/Sidebar";
+import Navbar from "../../components/Admin/Navbar";
 
 const InitiatePayout: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -31,9 +34,22 @@ const InitiatePayout: React.FC = () => {
     setLoading(false);
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    const toggleSidebar = () => {
+      setIsSidebarOpen(!isSidebarOpen);
+    }
+    
+
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Initiate Payout</h2>
+    <div>
+      <div className="flex flex-col h-screen">
+      <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="flex flex-1">
+        <Sidebar isOpen={isSidebarOpen} />
+        <main className={`flex-1 p-6 bg-gray-100 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        <div className="max-w-md mx-auto pt-2 pb-3 pr-6 pl-6 bg-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">Initiate Payout</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block font-medium">Service Provider ID</label>
@@ -82,7 +98,7 @@ const InitiatePayout: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          className="px-4 py-2 bg-custom-gradient text-white rounded-md"
           disabled={loading}
         >
           {loading ? "Processing..." : "Initiate Payout"}
@@ -90,6 +106,12 @@ const InitiatePayout: React.FC = () => {
         {message && <p className="mt-4 text-sm">{message}</p>}
       </form>
     </div>
+    </main>
+      </div>
+      <AdminFooter />
+    </div>
+    </div>
+
   );
 };
 

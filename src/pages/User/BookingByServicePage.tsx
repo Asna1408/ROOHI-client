@@ -1,5 +1,3 @@
-
-
 import BookingDetailsByService from "../../components/User/BookingDetailsByService";
 import Footer from "../../components/User/Footer";
 import Header from "../../components/User/Header";

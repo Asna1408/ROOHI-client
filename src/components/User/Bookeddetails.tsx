@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import {  useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2'; 
 import FormComponent from '../Common/FormComponent';
 import { toast } from 'react-toastify';
 import axiosInstance from '../../constant/axiosInstance';
 
 const Bookeddetails: React.FC = () => {
-  const location = useLocation();
   const { currentUser } = useSelector((state: any) => state.user);
   const { BookingId } = useParams(); 
   const [bookingDetails, setBookingDetails] = useState<any>(null);

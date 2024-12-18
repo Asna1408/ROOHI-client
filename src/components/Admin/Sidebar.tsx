@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {  FaHome, FaUsers, FaCalendarAlt,  FaFlag, FaToolbox , FaCalendarCheck} from 'react-icons/fa';
+import {  FaHome, FaUsers,  FaFlag, FaToolbox , FaCalendarCheck} from 'react-icons/fa';
 
 interface SidebarProps {
   isOpen: boolean;

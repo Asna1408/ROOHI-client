@@ -14,7 +14,7 @@ const ArtistPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [reviews, setReviews] = useState<any[]>([]);
-  const [bookingStatus, setBookingStatus] = useState<string | null>(null); // State for booking status
+  const [, setBookingStatus] = useState<string | null>(null); // State for booking status
 
   const navigate = useNavigate()
   const { currentUser } = useSelector((state: any) => state.user);

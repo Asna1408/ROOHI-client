@@ -1,4 +1,3 @@
-import React from 'react'
 import Forget from '../../components/User/Forget'
 import Header from '../../components/User/Header'
 import Footer from '../../components/User/Footer'

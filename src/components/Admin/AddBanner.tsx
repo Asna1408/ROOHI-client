@@ -1,9 +1,8 @@
 
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { uploadImage } from "../../constant/CloudinaryService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from 'axios';
 import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 const AddBanner: React.FC = () => {
@@ -104,7 +103,7 @@ const AddBanner: React.FC = () => {
         images: [imageUrl], 
       };
 
-      const response = await axiosInstance.post('/admin/banner/addBanner', newBanner, {
+       await axiosInstance.post('/admin/banner/addBanner', newBanner, {
         headers: {
           'Content-Type': 'application/json',
         },

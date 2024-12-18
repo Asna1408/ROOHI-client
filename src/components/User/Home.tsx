@@ -46,7 +46,7 @@ const Home: React.FC = () => {
   >
     {banners.length > 0 ? (
       // Wrap the mapped content in an array
-      banners.map((banner, i) => (
+      banners.map((banner) => (
         <div
           key={banner._id}
           className="bg-cover bg-center py-40"

@@ -1,7 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 // Create Axios instance
 const axiosInstance = axios.create({

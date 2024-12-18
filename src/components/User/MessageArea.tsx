@@ -27,8 +27,8 @@ const MessageArea = () => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [typing, setTyping] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  // const [typing, setTyping] = useState(false);
+  const [, setIsTyping] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -137,36 +137,36 @@ const MessageArea = () => {
     }
   };
 
-  const handleTyping = (e: { target: { value: React.SetStateAction<string> } }) => {
-    const inputValue = e.target.value;
-    setInputValue(inputValue);
+  // const handleTyping = (e: { target: { value: React.SetStateAction<string> } }) => {
+  //   const inputValue = e.target.value;
+  //   setInputValue(inputValue);
 
-    if (inputValue === '') {
-      if (typing) {
-        socket.emit('stop typing', chatId);
-        setTyping(false);
-      }
-      return;
-    }
+  //   if (inputValue === '') {
+  //     if (typing) {
+  //       socket.emit('stop typing', chatId);
+  //       setTyping(false);
+  //     }
+  //     return;
+  //   }
 
-    if (!typing) {
-      setTyping(true);
-      socket.emit('typing', chatId);
-    }
+  //   if (!typing) {
+  //     setTyping(true);
+  //     socket.emit('typing', chatId);
+  //   }
 
-    let lastTypingTime = new Date().getTime();
-    const timeLength = 3000;
+  //   let lastTypingTime = new Date().getTime();
+  //   const timeLength = 3000;
 
-    setTimeout(() => {
-      const timenow = new Date().getTime();
-      const timeDiff = timenow - lastTypingTime;
+  //   setTimeout(() => {
+  //     const timenow = new Date().getTime();
+  //     const timeDiff = timenow - lastTypingTime;
 
-      if (timeDiff >= timeLength && typing) {
-        socket.emit('stop typing', chatId);
-        setTyping(false);
-      }
-    }, timeLength);
-  };
+  //     if (timeDiff >= timeLength && typing) {
+  //       socket.emit('stop typing', chatId);
+  //       setTyping(false);
+  //     }
+  //   }, timeLength);
+  // };
 
   const handleSend = async () => {
     if (inputValue.trim() || imageFile || audioBlob) {

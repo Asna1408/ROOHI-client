@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';  
     import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";  
-    import { faBell, faUser } from '@fortawesome/free-solid-svg-icons';  
+    import { faUser } from '@fortawesome/free-solid-svg-icons';  
     import { faBars } from '@fortawesome/free-solid-svg-icons';  
     import { faTimes } from '@fortawesome/free-solid-svg-icons';  
 import { useDispatch,useSelector } from 'react-redux';
 import { signoutSuccess } from '../../redux/user/UserSlice';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import io, { Socket } from "socket.io-client";
 import { toast, Toaster } from 'react-hot-toast';

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Pagination from "../Common/Pagination";
 import TableComponent from "../Common/TableComponent";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../constant/axiosInstanceAdmin";
 

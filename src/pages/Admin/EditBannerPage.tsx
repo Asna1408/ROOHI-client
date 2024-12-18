@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import AdminFooter from "../../components/Admin/AdminFooter";
 import Navbar from "../../components/Admin/Navbar";
 import Sidebar from "../../components/Admin/Sidebar";

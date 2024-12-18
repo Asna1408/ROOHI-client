@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import TableComponent from '../Common/TableComponent'; 
 import Pagination from '../Common/Pagination'; 
 import axiosInstance from '../../constant/axiosInstanceAdmin';

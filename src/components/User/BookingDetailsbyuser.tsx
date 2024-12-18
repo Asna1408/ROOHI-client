@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Common/Pagination";
-import axios from "axios";
 import axiosInstance from "../../constant/axiosInstance";
 
 
@@ -20,7 +19,7 @@ interface Booking {
 const BookingDetailsByUser: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 

@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect,useRef, useState } from 'react';
+import  { useEffect,useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../../constant/axiosInstance';
@@ -7,7 +6,7 @@ import axiosInstance from '../../constant/axiosInstance';
 
 const BookingSuccess = () => {
   const [searchParams] = useSearchParams(); 
-  const [bookingDetails, setBookingDetails] = useState<any>(null);
+  const [, setBookingDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const hasCalled = useRef(false);
 

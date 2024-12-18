@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { RootState } from '../../redux/store'; 
 import { loadStripe } from '@stripe/stripe-js';
 import axiosInstance from '../../constant/axiosInstance';

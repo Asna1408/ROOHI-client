@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import FormComponent from '../Common/FormComponent'; 
 import axiosInstance from '../../constant/axiosInstanceAdmin';
 

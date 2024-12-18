@@ -1,8 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { Link,useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';  
 import TableComponent from '../Common/TableComponent'; 
 import Pagination from '../Common/Pagination';

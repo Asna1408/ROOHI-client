@@ -1,8 +1,7 @@
-
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { FaFilter, FaStar } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 interface Service {
   _id: string;
@@ -10,7 +9,7 @@ interface Service {
   location: string;
   price: number;
   provider_id: {
-    _id: string; 
+    _id: string;
     name: string;
     email: string;
   } | null;
@@ -23,43 +22,45 @@ const Service = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useSelector((state: any) => state.user);
 
-useEffect(() => {
-  const fetchServices = async () => {
-    try {
-      const response = await axios.get('/user/getallpost');
-      setServices(response.data); 
-    } catch (error) {
-      console.error('Error fetching services:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get("/user/getallpost");
+        setServices(response.data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchServices();
-}, []);
-
+    fetchServices();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   // Debugging
-  console.log('Current User:', currentUser);
+  console.log("Current User:", currentUser);
   services.forEach((service) => {
-    console.log('Service Provider ID:', service.provider_id);
+    console.log("Service Provider ID:", service.provider_id);
   });
 
   const filteredServices = services.filter(
     (service) =>
-      !currentUser || (service.provider_id && service.provider_id._id !== currentUser._id)
+      !currentUser ||
+      (service.provider_id && service.provider_id._id !== currentUser._id)
   );
 
   // Debug filtered services
-  console.log('Filtered Services:', filteredServices);
+  console.log("Filtered Services:", filteredServices);
 
   return (
     <div className="container mx-auto p-10">
-      <h1 className="text-3xl text-customGray font-bold font-serif mb-6">ALL SERVICES</h1>
+      <h1 className="text-3xl text-customGray font-bold font-serif mb-6">
+        ALL SERVICES
+      </h1>
 
       {/* Search and Filter Section */}
       {/* <div className="flex justify-between mb-4">
@@ -85,7 +86,7 @@ useEffect(() => {
               {/* Image with href */}
               <a href={`/artist/${service._id}`}>
                 <img
-                  src={service.images[0] || '/default-image.jpg'}
+                  src={service.images[0] || "/default-image.jpg"}
                   alt={service.service_name}
                   className="w-full h-48 object-cover"
                 />

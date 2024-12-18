@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../constant/CloudinaryService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import axios from "axios";
 import axiosInstance from "../../constant/axiosInstance";
 
 interface ServiceCategory {

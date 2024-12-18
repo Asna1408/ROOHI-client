@@ -1,7 +1,6 @@
 import BookingDetailsbyuser from "../../components/User/BookingDetailsbyuser";
 import Footer from "../../components/User/Footer";
 import Header from "../../components/User/Header";
-import PostTable from "../../components/User/PostTable";
 import UserSidebar from "../../components/User/UserSidebar";
 
 function BookingByUserPage() {

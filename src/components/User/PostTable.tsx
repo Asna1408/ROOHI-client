@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import TableComponent from "../Common/TableComponent";
 import Pagination from '../Common/Pagination';
-import axios from 'axios';
 import axiosInstance from '../../constant/axiosInstance';
 
 interface Service {

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TableComponent from '../Common/TableComponent'; 
 import Pagination from '../Common/Pagination'; 
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 interface User {
   _id: string;
@@ -20,7 +21,7 @@ const UserList: React.FC = () => {
   const fetchUsers = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/admin/UserList?page=${page}&limit=10`); 
+      const response = await axiosInstance.get(`/admin/UserList?page=${page}&limit=10`); 
       setUsers(response.data.users);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -36,7 +37,7 @@ const UserList: React.FC = () => {
 
   const handleBlock = async (userId: string) => {
     try {
-      await axios.post(`/admin/block/${userId}`);
+      await axiosInstance.post(`/admin/block/${userId}`);
       setUsers(users.map(user => 
         user._id === userId ? { ...user, isBlocked: true } : user
       ));
@@ -47,7 +48,7 @@ const UserList: React.FC = () => {
 
   const handleUnblock = async (userId: string) => {
     try {
-      await axios.post(`/admin/unblock/${userId}`);
+      await axiosInstance.post(`/admin/unblock/${userId}`);
       setUsers(users.map(user => 
         user._id === userId ? { ...user, isBlocked: false } : user
       ));

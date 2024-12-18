@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2'; 
 import FormComponent from '../Common/FormComponent';
+import axiosInstance from '../../constant/axiosInstance';
 
 const BookeddetailsService: React.FC = () => {
   const location = useLocation();
@@ -22,7 +23,7 @@ const BookeddetailsService: React.FC = () => {
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
-        const response = await axios.get(`/user/bookdetailsbyid/${BookingId}`);
+        const response = await axiosInstance.get(`/user/bookdetailsbyid/${BookingId}`);
         setBookingDetails(response.data);
         setStatus(response.data.status);
       } catch (error) {
@@ -54,7 +55,7 @@ const BookeddetailsService: React.FC = () => {
       if (result.isConfirmed) {
         try {
           
-          const response = await axios.post(`/user/cancel/${BookingId}`, {
+          const response = await axiosInstance.post(`/user/cancel/${BookingId}`, {
             BookingId,
           });
 
@@ -81,7 +82,7 @@ const BookeddetailsService: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(`/user/complete/${BookingId}`);
+      const response = await axiosInstance.post(`/user/complete/${BookingId}`);
       if (response.status === 200) {
         setStatus('completed'); 
         Swal.fire('Completed!', 'Your booking has been marked as completed.', 'success');

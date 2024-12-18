@@ -11,6 +11,7 @@ import { signInSuccess } from "../../redux/user/UserSlice";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import axiosInstance from '../../constant/axiosInstance';
 
 
 
@@ -19,10 +20,11 @@ const Login: React.FC = () => {
 const [email,setEmail] = useState<string>("");
 const[password,setPassword] = useState<string>("")
 const [showPassword, setShowPassword] = useState(false); 
+const [emailError, setEmailError] = useState<string | null>(null);
+const [passwordError, setPasswordError] = useState<string | null>(null);
 const navigate = useNavigate();
 const dispatch = useDispatch();
 const { currentUser } = useSelector((state: any) => state.user);
-console.log(currentUser,"Google user rrrrrrrrrrrrrrrrrr")
 
 
 useEffect(()=>{
@@ -119,33 +121,44 @@ const handleGoogleClick = async () => {
   }
 };
 
+const validateFields = (): boolean => {
+  let isValid = true;
+
+  if (!email) {
+    setEmailError(VALIDATION_MESSAGES.EMAIL.REQUIRED);
+    isValid = false;
+  } else if (!REGEX.EMAIL.test(email)) {
+    setEmailError(VALIDATION_MESSAGES.EMAIL.INVALID);
+    isValid = false;
+  } else {
+    setEmailError(null);
+  }
+
+  if (!password) {
+    setPasswordError(VALIDATION_MESSAGES.PASSWORD.REQUIRED);
+    isValid = false;
+  } else if (!REGEX.PASSWORD.test(password)) {
+    setPasswordError(VALIDATION_MESSAGES.PASSWORD.INVALID);
+    isValid = false;
+  } else {
+    setPasswordError(null);
+  }
+
+  return isValid;
+};
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
-  if (!email) {
-    toast.error(VALIDATION_MESSAGES.EMAIL.REQUIRED);
-    return;
-  }
-  if (!REGEX.EMAIL.test(email)) {
-    toast.error(VALIDATION_MESSAGES.EMAIL.INVALID);
-    return;
-  }
-
-  if (!password) {
-    toast.error(VALIDATION_MESSAGES.PASSWORD.REQUIRED);
-    return;
-  }
-  if (!REGEX.PASSWORD.test(password)) {
-    toast.error(VALIDATION_MESSAGES.PASSWORD.INVALID);
+  if (!validateFields()) {
     return;
   }
 
   try {
-  const res = await axios.post('/user/login',{
-    email,
-    password
-  })
+    const res = await axiosInstance.post('/user/login',{
+      email,
+      password
+    })
 
   if(res.data == 'Your Account is Blocked'){
     toast.error("Your Account has been Blocked")
@@ -210,6 +223,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               onChange={(e)=>setEmail(e.target.value)}
             
             />
+                        {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
           </div>
 
           <div className="mb-6 relative">
@@ -233,6 +247,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
             </div>
+            {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
           </div>
 
           <button

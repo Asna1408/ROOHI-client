@@ -4,12 +4,10 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-
 import {REGEX,VALIDATION_MESSAGES} from '../../constant/validation'
 import { signInSuccess } from '../../redux/admin/AdminSlice';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
-
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 
 const Login: React.FC = () => {
@@ -17,6 +15,8 @@ const Login: React.FC = () => {
 const [email,setEmail] = useState<string>("");
 const[password,setPassword] = useState<string>("")
 const [showPassword, setShowPassword] = useState(false); 
+const [emailError, setEmailError] = useState<string | null>(null);
+const [passwordError, setPasswordError] = useState<string | null>(null);
 const navigate = useNavigate();
 const dispatch = useDispatch();
 const { currentAdmin } = useSelector((state: any) => state.admin);
@@ -28,29 +28,41 @@ useEffect(()=>{
     }
 },[])
 
+const validateFields = (): boolean => {
+  let isValid = true;
 
+  if (!email) {
+    setEmailError(VALIDATION_MESSAGES.EMAIL.REQUIRED);
+    isValid = false;
+  } else if (!REGEX.EMAIL.test(email)) {
+    setEmailError(VALIDATION_MESSAGES.EMAIL.INVALID);
+    isValid = false;
+  } else {
+    setEmailError(null);
+  }
+
+  if (!password) {
+    setPasswordError(VALIDATION_MESSAGES.PASSWORD.REQUIRED);
+    isValid = false;
+  } else if (!REGEX.PASSWORD.test(password)) {
+    setPasswordError(VALIDATION_MESSAGES.PASSWORD.INVALID);
+    isValid = false;
+  } else {
+    setPasswordError(null);
+  }
+
+  return isValid;
+};
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
-  if (!email) {
-    toast.error(VALIDATION_MESSAGES.EMAIL.REQUIRED);
-    return;
-  }
-  if (!REGEX.EMAIL.test(email)) {
-    toast.error(VALIDATION_MESSAGES.EMAIL.INVALID);
-    return;
-  }
-
-  // Password Validation
-  
-  if (!REGEX.PASSWORD.test(password)) {
-    toast.error("Invalid Password");
+  if (!validateFields()) {
     return;
   }
 
   try {
-  const res = await axios.post('/admin/admin_login',{
+  const res = await axiosInstance.post('/admin/admin_login',{
     email,
     password
   })
@@ -104,6 +116,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-customGold"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)} />
+                  {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+
             </div>
 
             <div className="mb-6 relative">
@@ -125,6 +139,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
+
             </div>
 
             <button

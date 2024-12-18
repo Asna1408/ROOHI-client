@@ -4,6 +4,7 @@ import { uploadImage } from "../../constant/CloudinaryService";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
+import axiosInstance from "../../constant/axiosInstance";
 
 interface ServiceCategory {
   _id?: string;
@@ -36,7 +37,7 @@ const EditPost = () => {
   
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('/admin/serviceList');
+        const response = await axiosInstance.get('/admin/serviceList');
   
         if (response.data && Array.isArray(response.data.categories)) {
           setServiceCategories(response.data.categories); 
@@ -60,7 +61,7 @@ const EditPost = () => {
       if (postId) {
         try {
           console.log(`Fetching service data from: /user/editpost/${postId}`);
-          const response = await axios.get(`/user/editpost/${postId}`);
+          const response = await axiosInstance.get(`/user/editpost/${postId}`);
     
           if (response.status === 200) {
             const data = response.data;
@@ -178,7 +179,7 @@ const EditPost = () => {
       };
   
       
-      const response = await axios.put(`/user/editpost/${postId}`, updatedService, {
+      const response = await axiosInstance.put(`/user/editpost/${postId}`, updatedService, {
         headers: {
           'Content-Type': 'application/json',
         },

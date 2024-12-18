@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import TableComponent from "../Common/TableComponent"; // Import the reusable TableComponent
 import Pagination from "../Common/Pagination";
+import axiosInstance from "../../constant/axiosInstance";
 
 interface Booking {
   _id: string;
@@ -31,7 +32,7 @@ const BookingDetailsByService: React.FC = () => {
   const fetchBookingDetails = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/user/bookdetails/bookings/${currentUser._id}?page=${page}&limit=10`
       );
       const data = response.data;

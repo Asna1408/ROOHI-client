@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../constant/axiosInstance';
 
  interface User {
   _id: string;
@@ -12,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 }
 
 interface Conversation {
+  updatedAt: string | number | Date;
   _id: string;
   members: User[];
   lastMessage?: string;
@@ -25,6 +27,8 @@ const ConversationList = () => {
   const { currentUser } = useSelector((state: any) => state.user);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     // Connect to socket and emit user ID
@@ -43,7 +47,7 @@ const ConversationList = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const response = await axios.get(`/user/get-user-conversations/${currentUser._id}`);
+        const response = await axiosInstance.get(`/user/get-user-conversations/${currentUser._id}`);
         setConversations(response.data);
       } catch (error) {
         console.error('Failed to fetch conversations', error);
@@ -51,15 +55,20 @@ const ConversationList = () => {
     };
 
     fetchConversations();    
-
-
   }, [currentUser]);
-const navigate = useNavigate();
+  
 
 const handleNavigate = (conId: string, provId: string, name: string)=>{
   navigate(`/chat?conId=${conId}&providerId=${provId}&providerName=${name}`);
 }
   
+// const handleNavigate = (conId: string, provId: string, name: string) => {
+//   navigate('/chat', {
+//     state: { conId, providerId: provId, providerName: name },
+//   });
+// };
+
+
 
   return (
     <div className="w-80 bg-gray-100 p-4 border-r border-gray-200">

@@ -4,6 +4,7 @@ import Pagination from "../Common/Pagination";
 import TableComponent from "../Common/TableComponent";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../constant/axiosInstanceAdmin";
 
 
 interface Booking {
@@ -33,7 +34,7 @@ const AdminBooking: React.FC = () => {
     const fetchBookings = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/admin/bookdetails?page=${currentPage}&limit=10`);
+        const response = await axiosInstance.get(`/admin/bookdetails?page=${currentPage}&limit=10`);
         const { bookings, totalPages } = response.data;
 
         setBookings(bookings);

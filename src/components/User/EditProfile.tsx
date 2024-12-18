@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import axiosInstance from "../../constant/axiosInstance";
 
 const EditProfile = () => {
   const { userId } = useParams(); 
@@ -15,7 +16,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`/user/editProfile/${userId}`);
+        const response = await axiosInstance.get(`/user/editProfile/${userId}`);
         const userData = response.data;
         setName(userData.name || "");
         setEmail(userData.email || "");
@@ -35,7 +36,7 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       const updateData = { name, email, phone };
-      await axios.post(`/user/editProfile/${userId}`, updateData);
+      await axiosInstance.post(`/user/editProfile/${userId}`, updateData);
       toast.success('Profile Updated Successfully');
 
       navigate("/profile"); 

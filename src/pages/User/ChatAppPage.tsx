@@ -8,17 +8,12 @@ import { useLocation } from 'react-router-dom';
 
 const ChatApp: React.FC = () => {
   const [userName, setUserName] = useState<string>()
-
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-
   const providerName = query.get('providerName') ?? '';
 
   useEffect(() => {
- 
         setUserName(providerName);
-    
-  
   }, [providerName]);
 
   console.log("provider name in chat header ")

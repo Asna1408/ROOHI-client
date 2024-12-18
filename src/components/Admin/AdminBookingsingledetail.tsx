@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import FormComponent from '../Common/FormComponent'; 
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 interface BookingDetail {
   status: string;
@@ -29,7 +30,7 @@ const AdminBookingSingledetail: React.FC = () => {
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
-        const response = await axios.get(`/admin/Bookdetails/${bookingId}`);
+        const response = await axiosInstance.get(`/admin/Bookdetails/${bookingId}`);
         setBookingDetails(response.data);
         setLoading(false);
       } catch (err) {

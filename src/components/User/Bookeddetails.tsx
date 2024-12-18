@@ -4,12 +4,17 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2'; 
 import FormComponent from '../Common/FormComponent';
+import { toast } from 'react-toastify';
+import axiosInstance from '../../constant/axiosInstance';
 
 const Bookeddetails: React.FC = () => {
   const location = useLocation();
   const { currentUser } = useSelector((state: any) => state.user);
   const { BookingId } = useParams(); 
   const [bookingDetails, setBookingDetails] = useState<any>(null);
+  const [rating, setRating] = useState<number>(0); // State for rating
+  const [review, setReview] = useState<string>(""); 
+  const [submitError, setSubmitError] = useState<string>(""); 
   const navigate = useNavigate();
 
 
@@ -22,7 +27,7 @@ const Bookeddetails: React.FC = () => {
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
-        const response = await axios.get(`/user/bookdetailsbyid/${BookingId}`);
+        const response = await axiosInstance.get(`/user/bookdetailsbyid/${BookingId}`);
         setBookingDetails(response.data);
       } catch (error) {
         console.error('Error fetching booking details:', error);
@@ -54,7 +59,7 @@ const Bookeddetails: React.FC = () => {
       if (result.isConfirmed) {
         try {
          
-          const response = await axios.post(`/user/cancel/${BookingId}`, {
+          const response = await axiosInstance.post(`/user/cancel/${BookingId}`, {
             BookingId,
           });
 
@@ -70,6 +75,45 @@ const Bookeddetails: React.FC = () => {
         }
       }
     });
+  };
+
+  // console.log( bookingDetails.service_id.id)
+  const handleSubmitReview = async () => {
+    if (rating === 0 || review.trim() === "") {
+      toast.error("Please provide a rating and review.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/user/review/addReview', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id:currentUser._id,
+          service_id: bookingDetails.service_id._id,
+          rating,
+          review,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit review , review cannot be submitted before service");
+      }
+
+      // Clear the form after successful submission
+      setRating(0);
+      setReview("");
+      setSubmitError("");
+      toast.success("Review submitted successfully!");
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        setSubmitError("An unknown error occurred");
+      }
+    }
   };
 
   return (
@@ -101,9 +145,42 @@ const Bookeddetails: React.FC = () => {
     Cancelled
   </button>
 ) : bookingDetails?.status === 'completed' ? (
+  <>
   <button className="bg-green-500 text-white px-4 py-2 w-full mt-4" disabled>
     Completed
   </button>
+
+  <div className="mt-10">
+    <h2 className="font-bold text-lg font-serif text-customGray">Review & Rating</h2>
+    <div className="bg-gray-100 p-4 rounded mt-4">
+      <div className="flex items-center space-x-2">
+        {/* Stars for rating */}
+        {[...Array(5)].map((_, i) => (
+          <span
+            key={i}
+            className={`cursor-pointer ${i < rating ? "text-customGold" : "text-gray-400"}`}
+            onClick={() => setRating(i + 1)}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+      <textarea
+        placeholder="Share your experience about us"
+        value={review}
+        onChange={(e) => setReview(e.target.value)}
+        className="mt-4 w-full p-2 bg-white border rounded"
+      />
+      {submitError && <p className="text-red-500 mt-2">{submitError}</p>}
+      <button
+        className="mt-4 bg-custom-gradient text-white py-2 px-4 rounded"
+        onClick={handleSubmitReview}
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+  </>
 ) : (
   <button
     className="bg-custom-gradient text-white px-4 py-2 hover:bg-red-600 w-full mt-4"

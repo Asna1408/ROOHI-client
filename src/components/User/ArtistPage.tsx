@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import oliveBranch from '../../assets/user/category/olive_branch.png'
 import axios from "axios";
+import axiosInstance from "../../constant/axiosInstance";
 
 
 const ArtistPage: React.FC = () => {
@@ -12,9 +13,6 @@ const ArtistPage: React.FC = () => {
   const [service, setService] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [rating, setRating] = useState<number>(0); // State for rating
-  const [review, setReview] = useState<string>(""); 
-  const [submitError, setSubmitError] = useState<string>(""); 
   const [reviews, setReviews] = useState<any[]>([]);
   const [bookingStatus, setBookingStatus] = useState<string | null>(null); // State for booking status
 
@@ -59,7 +57,7 @@ const ArtistPage: React.FC = () => {
 
     const fetchBookingStatus = async () => {
       try {
-        const response = await axios.get(`/user/booking/${currentUser._id}/${id}/status`);
+        const response = await axiosInstance.get(`/user/booking/${currentUser._id}/${id}/status`);
         console.log(response.data, 'booking status');
         setBookingStatus(response.data.bookingStatus?.status || null);
       } catch (err) {
@@ -71,48 +69,6 @@ const ArtistPage: React.FC = () => {
     fetchReviews();
     fetchBookingStatus();
   }, [id,currentUser]);
-
-
-  
-  
-
-  const handleSubmitReview = async () => {
-    if (rating === 0 || review.trim() === "") {
-      toast.error("Please provide a rating and review.");
-      return;
-    }
-
-    try {
-      const response = await fetch('/user/review/addReview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id:currentUser._id,
-          service_id: id, 
-          rating,
-          review,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit review , review cannot be submitted before service");
-      }
-
-      // Clear the form after successful submission
-      setRating(0);
-      setReview("");
-      setSubmitError("");
-      toast.success("Review submitted successfully!");
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      } else {
-        setSubmitError("An unknown error occurred");
-      }
-    }
-  };
 
   const handleCreateConversation = async () => {
     if (!currentUser) {
@@ -271,40 +227,6 @@ const ArtistPage: React.FC = () => {
     )}
   </div>
 </div>
-
-{/* Review & Rating Section */}
-{bookingStatus === "completed" && (
-<div className="mt-10">
-  <h2 className="font-bold text-lg font-serif text-customGray">Review & Rating</h2>
-  <div className="bg-gray-100 p-4 rounded mt-4">
-    <div className="flex items-center space-x-2">
-      {/* Stars for rating */}
-      {[...Array(5)].map((_, i) => (
-        <span
-          key={i}
-          className={`cursor-pointer ${i < rating ? "text-customGold" : "text-gray-400"}`}
-          onClick={() => setRating(i + 1)}
-        >
-          ★
-        </span>
-      ))}
-    </div>
-    <textarea
-      placeholder="Share your experience about us"
-      value={review}
-      onChange={(e) => setReview(e.target.value)}
-      className="mt-4 w-full p-2 bg-white border rounded"
-    />
-    {submitError && <p className="text-red-500 mt-2">{submitError}</p>}
-    <button
-      className="mt-4 bg-custom-gradient text-white py-2 px-4 rounded"
-      onClick={handleSubmitReview}
-    >
-      Submit
-    </button>
-  </div>
-</div>
-)}
 </div>
 
      </>

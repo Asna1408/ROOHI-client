@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setSelectedDate } from "../../redux/user/BookingSlice"; 
 import { toast } from 'react-toastify';
+import axiosInstance from '../../constant/axiosInstance';
 
 interface AvailableDatesProps {
   serviceId: string; 
@@ -18,18 +19,23 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     const fetchAvailableDates = async () => {
       try {
-        const response = await axios.get(`/user/services/${serviceId}/availability`);
-        const { availableDates} = response.data;
+        const response = await axiosInstance.get(`/user/services/${serviceId}/availability`);
+        const { availableDates } = response.data;
 
-        console.log(response.data);
+        // Filter out past dates
+        const today = new Date();
+        const filteredDates = availableDates.filter((date: string) => {
+          const currentDate = new Date(date);
+          return currentDate >= today; 
+        });
 
-        setAvailableDates(availableDates);
+        setAvailableDates(filteredDates);
       } catch (error) {
-        toast.error("failed to fetch ")
+        toast.error("Failed to fetch available dates");
         console.error('Error fetching availability:', error);
-
       }
     };
 

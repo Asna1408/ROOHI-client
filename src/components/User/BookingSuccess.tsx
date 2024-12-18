@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect,useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../constant/axiosInstance';
 
 
 const BookingSuccess = () => {
@@ -27,7 +28,7 @@ const BookingSuccess = () => {
         
         try {
 
-const response = await axios.get(`/user/booking/success`,{
+const response = await axiosInstance.get(`/user/booking/success`,{
   params: {session_id: sessionId,
     service_id: serviceId,
     user_id: userId,

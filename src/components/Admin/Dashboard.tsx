@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';  
 import { FaUsers, FaLaptop, FaMoneyBillWave } from 'react-icons/fa';  
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Line } from "recharts";
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 const Dashboard = () => { 
   const [userCount, setUserCount] = useState(0);
@@ -17,7 +18,7 @@ const [bookingCount, setBookingCount] = useState(0);
 useEffect(() => {
   const fetchUserCount = async () => {
     try {
-      const response = await axios.get('/admin/get-user-count');
+      const response = await axiosInstance.get('/admin/get-user-count');
       setUserCount(response.data.count);
     } catch (error) {
       console.error("Error fetching user count:", error);
@@ -26,7 +27,7 @@ useEffect(() => {
 
   const fetchBookingCount = async () => {
     try {
-      const response = await axios.get('/admin/get-booking-count');
+      const response = await axiosInstance.get('/admin/get-booking-count');
       setBookingCount(response.data.count);
     } catch (error) {
       console.error("Error fetching booking count:", error);
@@ -35,7 +36,7 @@ useEffect(() => {
 
   const fetchTotalRevenue = async () => {
     try {
-      const response = await axios.get("/admin/get-totalrevenue");
+      const response = await axiosInstance.get("/admin/get-totalrevenue");
       console.log("API Response for Revenue:", response.data);
       setTotalRevenue(response.data || 0);
     } catch (error) {
@@ -45,7 +46,7 @@ useEffect(() => {
 
   const fetchBookingStatus = async () => {
     try {
-      const response = await axios.get("/admin/get-bookingstatus");
+      const response = await axiosInstance.get("/admin/get-bookingstatus");
       setBookingStatusDistribution(response.data || []);
     } catch (error) {
       console.error("Error fetching booking status distribution:", error);
@@ -54,7 +55,7 @@ useEffect(() => {
 
   const fetchRevenueOverTime = async () => {
     try {
-        const response = await axios.get(`/admin/get-revenueOvertime?filter=${filter}`);
+        const response = await axiosInstance.get(`/admin/get-revenueOvertime?filter=${filter}`);
       setRevenueOverTime(response.data || []);
     } catch (error) {
       console.error("Error fetching revenue over time:", error);

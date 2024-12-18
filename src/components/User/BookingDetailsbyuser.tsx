@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Common/Pagination";
 import axios from "axios";
+import axiosInstance from "../../constant/axiosInstance";
 
 
 interface Booking {
@@ -29,7 +30,7 @@ const BookingDetailsByUser: React.FC = () => {
   const fetchBookingDetails = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/user/bookdetails/${currentUser._id}/bookings`, {
+      const response = await axiosInstance.get(`/user/bookdetails/${currentUser._id}/bookings`, {
         params: {
           page: page,
           limit: 10

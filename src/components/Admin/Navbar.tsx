@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 
 interface NavbarProps {
@@ -38,7 +39,7 @@ console.log(currentAdmin)
       if (result.isConfirmed) {
         console.log("logout")
         try {
-          const res = await axios.get('/admin/logout');
+          const res = await axiosInstance.get('/admin/logout');
           if (res.data.message === 'success') {
             dispatch(signoutSuccess());
             Swal.fire({

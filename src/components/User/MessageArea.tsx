@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faMicrophone, faStop } from '@fortawesome/free-solid-svg-icons';
 import Message from './Message';
 import { useLocation } from 'react-router-dom';
+import axiosInstance from '../../constant/axiosInstance';
 
 interface MessageType {
   _id: string;
@@ -66,7 +67,7 @@ const MessageArea = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get(`/user/get-messages/${chatId}`);
+      const res = await axiosInstance.get(`/user/get-messages/${chatId}`);
       setMessages(res.data);
     } catch (error) {
       console.error("Failed to fetch messages:", error);

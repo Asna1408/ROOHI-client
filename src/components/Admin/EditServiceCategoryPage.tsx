@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'; 
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 interface EditServiceCategoryProps {
   categoryId: string;
@@ -16,7 +17,7 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`/admin/service-category/${categoryId}`);
+        const response = await axiosInstance.get(`/admin/service-category/${categoryId}`);
         setTypeName(response.data.type_name);
         setDescription(response.data.description);
         setLoading(false);

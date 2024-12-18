@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import TableComponent from '../Common/TableComponent';
 import Pagination from '../Common/Pagination'; // A reusable pagination component
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 interface ServiceCategory {
   _id: string;
@@ -23,7 +24,7 @@ const ServiceList: React.FC = () => {
   const fetchServiceCategories = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/admin/ServiceList?page=${page}&limit=10`);
+      const response = await axiosInstance.get(`/admin/ServiceList?page=${page}&limit=10`);
       setServiceCategories(response.data.categories);
       setTotalPages(response.data.totalPages);
     } catch (err) {
@@ -49,7 +50,7 @@ const ServiceList: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`/admin/DeleteService-category/${id}`);
+          await axiosInstance.delete(`/admin/DeleteService-category/${id}`);
           setServiceCategories(serviceCategories.filter((category) => category._id !== id));
           Swal.fire('Deleted!', 'Service category has been deleted.', 'success');
         } catch {

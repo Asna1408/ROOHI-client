@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 const AddServiceCategory: React.FC = () => {
   const [typeName, setTypeName] = useState('');  
@@ -14,7 +15,7 @@ const AddServiceCategory: React.FC = () => {
 
     const fetchExistingTypes = async () => {
       try {
-        const response = await axios.get('/admin/ServiceList'); 
+        const response = await axiosInstance.get('/admin/ServiceList'); 
         setExistingTypes(response.data.map((item: { type_name: string }) => item.type_name.trim().toLowerCase())); // Store types in lower case
       } catch (error) {
         console.error('Error fetching existing service types:', error);
@@ -43,7 +44,7 @@ const AddServiceCategory: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('/admin/AddServiceCategory', {
+      const response = await axiosInstance.post('/admin/AddServiceCategory', {
         type_name: trimmedTypeName,
         description: trimmedDescription,
       });

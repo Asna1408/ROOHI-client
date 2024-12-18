@@ -10,6 +10,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import io, { Socket } from "socket.io-client";
 import { toast, Toaster } from 'react-hot-toast';
+import axiosInstance from '../../constant/axiosInstance';
 
 
     const Header: React.FC = () => {  
@@ -25,9 +26,6 @@ import { toast, Toaster } from 'react-hot-toast';
         };  
 
         const socket: Socket = io('http://localhost:7000'); 
-
-  
-
 
         useEffect(() => {
           if(currentUser){
@@ -73,7 +71,7 @@ import { toast, Toaster } from 'react-hot-toast';
           }).then(async (result) => {
             if (result.isConfirmed) {
               try {
-                const res = await axios.get('/user/logout');
+                const res = await axiosInstance.get('/user/logout');
         
                 if (res.data.message === 'success') {
                   dispatch(signoutSuccess());

@@ -4,6 +4,7 @@ import { uploadImage } from "../../constant/CloudinaryService";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from 'axios';
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 const EditBanner: React.FC = () => { 
   const { BannerId } = useParams<{ BannerId: string }>();
@@ -22,7 +23,7 @@ const EditBanner: React.FC = () => {
     const fetchBannerData = async () => {
       if (BannerId) {
         try {
-          const response = await axios.get(`/admin/banner/${BannerId}`);
+          const response = await axiosInstance.get(`/admin/banner/${BannerId}`);
           setBannerData(response.data);
           if (response.data.images && response.data.images[0]) {
             setImagePreview(response.data.images[0]); // Show the existing image preview
@@ -100,7 +101,7 @@ const EditBanner: React.FC = () => {
         images: [imageUrl], // Replace the current image URL
       };
 
-      const response = await axios.post(`/admin/banner/updateBanner/${BannerId}`, updatedBanner, {
+      const response = await axiosInstance.post(`/admin/banner/updateBanner/${BannerId}`, updatedBanner, {
         headers: {
           'Content-Type': 'application/json',
         },

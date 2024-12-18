@@ -6,6 +6,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';  
 import TableComponent from '../Common/TableComponent'; 
 import Pagination from '../Common/Pagination';
+import axiosInstance from '../../constant/axiosInstanceAdmin';
 
 interface Banner {
     _id: string;
@@ -26,7 +27,7 @@ const BannerList: React.FC = () => {
   const fetchBanners = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/admin/banner?page=${page}&limit=10`);
+      const response = await axiosInstance.get(`/admin/banner?page=${page}&limit=10`);
       setBanners(response.data.banners);
       setTotalPages(response.data.totalPages);
     } catch (err) {
@@ -52,7 +53,7 @@ const BannerList: React.FC = () => {
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
-              await axios.delete(`/admin/banner/deleteBanner/${BannerId}`);  
+              await axiosInstance.delete(`/admin/banner/deleteBanner/${BannerId}`);  
               setBanners(banners.filter(banner => banner._id !== BannerId));
               Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
             } catch (err) {

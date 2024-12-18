@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { RootState } from '../../redux/store'; 
 import { loadStripe } from '@stripe/stripe-js';
+import axiosInstance from '../../constant/axiosInstance';
 
 
 const BookingForm: React.FC = () => {
@@ -26,7 +27,7 @@ const BookingForm: React.FC = () => {
     const fetchServiceDetails = async () => {
       try {
        
-        const response = await axios.get(`/user/servicedetails/${serviceId}`);
+        const response = await axiosInstance.get(`/user/servicedetails/${serviceId}`);
         console.log("Service details fetched:", response.data); // Debugging
         setService(response.data);
       } catch (error) {
@@ -51,7 +52,7 @@ const BookingForm: React.FC = () => {
     const currency = 'inr'; // Currency, you can change as per requirement
   
     try {
-      const response = await axios.post('/user/booknowcheckout', {
+      const response = await axiosInstance.post('/user/booknowcheckout', {
         serviceId,
         userId: currentUser._id,
         selectedDate,

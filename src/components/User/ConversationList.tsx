@@ -19,7 +19,8 @@ interface Conversation {
 }
 
 
-const socket = io('www.perfect-bride.shop');
+// const socket = io('http://localhost:7000');
+const socket = io('https://perfect-bride.shop');
 
 
 const ConversationList = () => {

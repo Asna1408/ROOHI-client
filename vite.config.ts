@@ -7,16 +7,21 @@ export default defineConfig({
   server: {
     proxy: {
       '/user': {
-        target: 'www.perfect-bride.shop',
+        // target: 'http://localhost:7000',
+        target: 'https://perfect-bride.shop',
+
         secure: false,
       },
       '/admin':{
-        target: 'www.perfect-bride.shop',
+        // target: 'http://localhost:7000',
+        target: 'https://perfect-bride.shop',
+
         secure:false,
       }
       
     },
-  },
+  },  
+
 
   plugins: [react()],
 })

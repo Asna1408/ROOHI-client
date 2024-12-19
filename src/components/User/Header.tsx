@@ -24,7 +24,8 @@ import axiosInstance from '../../constant/axiosInstance';
             setIsMenuOpen(!isMenuOpen);  
         };  
 
-        const socket: Socket = io('www.perfect-bride.shop'); 
+        const socket:Socket = io('https://perfect-bride.shop');
+
 
         useEffect(() => {
           if(currentUser){

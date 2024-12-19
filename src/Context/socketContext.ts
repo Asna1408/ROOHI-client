@@ -1,6 +1,6 @@
 // import { useEffect, useState } from 'react'
 // import {io} from 'socket.io-client'
-// const endpoint = "www.perfect-bride.shop";
+// const endpoint = "http://localhost:7000";
 
 // const [socket,setSocket] = useState(null)
 

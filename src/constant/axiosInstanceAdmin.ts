@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 // Create Axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:7000", // Replace with your API base URL
+  baseURL: "www.perfect-bride.shop", // Replace with your API base URL
   withCredentials: true, // Ensures cookies are sent with requests
 });
 

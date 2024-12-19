@@ -63,7 +63,7 @@ const MessageArea = () => {
 
   console.log("👍👍👍👍👍👍👍👍👍👍👍", provId, chatId, userName);
 
-  const socket = io('http://localhost:7000');
+  const socket = io('www.perfect-bride.shop');
 
   const fetchMessages = async () => {
     try {

@@ -76,9 +76,7 @@ const Home: React.FC = () => {
         <section className="container mx-auto px-4 py-10">
           <div className="flex justify-center mb-4">
             <img 
-            // src="src/assets/user/category/olive_branch.png" 
             src="./public/olive_branch.png" 
-
             alt="Decorative Design" className="w-16 h-auto" />
           </div>
           <h2 className="text-5xl font-bold mb-20 mt-10 text-center font-serif text-customGray">Our Services</h2>

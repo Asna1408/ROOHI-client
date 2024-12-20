@@ -25,7 +25,7 @@ const Service = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("user/getallpost");
+        const response = await axios.get("https://perfect-bride.shop/user/getallpost");
         setServices(response.data);
       } catch (error) {
         console.error("Error fetching services:", error);

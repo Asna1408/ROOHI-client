@@ -22,7 +22,7 @@ const [totalRevenue, setTotalRevenue] = useState(0);
 useEffect(() => {
   const fetchUserCount = async () => {
     try {
-      const response = await axiosInstance.get('https://perfect-bride.shop/admin/get-user-count');
+      const response = await axiosInstance.get("https://perfect-bride.shop/admin/get-user-count");
       setUserCount(response.data.count);
     } catch (error) {
       console.error("Error fetching user count:", error);
@@ -31,7 +31,7 @@ useEffect(() => {
 
   const fetchBookingCount = async () => {
     try {
-      const response = await axiosInstance.get('https://perfect-bride.shop/admin/get-booking-count');
+      const response = await axiosInstance.get("https://perfect-bride.shop/admin/get-booking-count");
       setBookingCount(response.data.count);
     } catch (error) {
       console.error("Error fetching booking count:", error);

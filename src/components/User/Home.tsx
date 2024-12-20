@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await axios.get('/user/home-banners'); 
+        const response = await axios.get('https://perfect-bride.shop/user/home-banners'); 
         setBanners(response.data); 
       } catch (error) {
         console.error('Error fetching banners:', error);

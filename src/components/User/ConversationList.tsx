@@ -61,13 +61,6 @@ const handleNavigate = (conId: string, provId: string, name: string)=>{
   navigate(`/chat?conId=${conId}&providerId=${provId}&providerName=${name}`);
 }
   
-// const handleNavigate = (conId: string, provId: string, name: string) => {
-//   navigate('/chat', {
-//     state: { conId, providerId: provId, providerName: name },
-//   });
-// };
-
-
 
   return (
     <div className="w-80 bg-gray-100 p-4 border-r border-gray-200">

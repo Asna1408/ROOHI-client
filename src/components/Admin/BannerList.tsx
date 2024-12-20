@@ -26,7 +26,7 @@ const BannerList: React.FC = () => {
   const fetchBanners = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`https://perfect-bride.shop/admin/banner?page=${page}&limit=10`);
+      const response = await axiosInstance.get(`admin/banner?page=${page}&limit=10`);
       setBanners(response.data.banners);
       setTotalPages(response.data.totalPages);
     } catch (err) {

@@ -27,7 +27,7 @@ const BookingSuccess = () => {
         
         try {
 
-const response = await axiosInstance.get(`/user/booking/success`,{
+const response = await axiosInstance.get(`https://perfect-bride.shop/user/booking/success`,{
   params: {session_id: sessionId,
     service_id: serviceId,
     user_id: userId,

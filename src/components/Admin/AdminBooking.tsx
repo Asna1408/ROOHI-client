@@ -33,7 +33,7 @@ const AdminBooking: React.FC = () => {
     const fetchBookings = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(`/admin/bookdetails?page=${currentPage}&limit=10`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/admin/bookdetails?page=${currentPage}&limit=10`);
         const { bookings, totalPages } = response.data;
 
         setBookings(bookings);
@@ -74,7 +74,7 @@ const AdminBooking: React.FC = () => {
         data={dataWithIndex}
         actions={(booking) => (
           <button
-            onClick={() => navigate(`/Superadmin/BookingList/${booking._id}`)}
+            onClick={() => navigate(`/superadmin/BookingList/${booking._id}`)}
             className="bg-red-500 text-white px-2 py-1 rounded hover:bg-opacity-75"
           >
             View

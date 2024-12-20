@@ -14,7 +14,7 @@ const AddServiceCategory: React.FC = () => {
 
     const fetchExistingTypes = async () => {
       try {
-        const response = await axiosInstance.get('/admin/ServiceList'); 
+        const response = await axiosInstance.get('https://perfect-bride.shop/admin/ServiceList'); 
         setExistingTypes(response.data.map((item: { type_name: string }) => item.type_name.trim().toLowerCase())); // Store types in lower case
       } catch (error) {
         console.error('Error fetching existing service types:', error);
@@ -43,14 +43,14 @@ const AddServiceCategory: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axiosInstance.post('/admin/AddServiceCategory', {
+      const response = await axiosInstance.post('https://perfect-bride.shop/admin/AddServiceCategory', {
         type_name: trimmedTypeName,
         description: trimmedDescription,
       });
 
       if (response.status === 201) {
         toast.success('Service category added successfully!');
-        navigate('/Superadmin/ServiceList');
+        navigate('/superadmin/ServiceList');
       } else {
         toast.error('Failed to add service category.');
       }

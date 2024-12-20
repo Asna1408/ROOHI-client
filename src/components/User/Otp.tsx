@@ -55,7 +55,7 @@ const Otp: React.FC = () => {
     }
 
     try {
-      const res = await axios.post('/user/verify_otp', { email, otp });
+      const res = await axios.post('https://perfect-bride.shop/user/verify_otp', { email, otp });
 
       if (res.data) {
         toast.success('OTP verified successfully!');
@@ -82,7 +82,7 @@ const Otp: React.FC = () => {
     try {
       console.log("Sending email to backend:", email); 
 
-      const res = await axios.post('/user/resendOtp', { email });
+      const res = await axios.post('https://perfect-bride.shop/user/resendOtp', { email });
 
       if (res.data.success) {
         toast.success('OTP resent successfully.');

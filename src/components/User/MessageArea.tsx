@@ -68,7 +68,7 @@ const MessageArea = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axiosInstance.get(`/user/get-messages/${chatId}`);
+      const res = await axiosInstance.get(`https://perfect-bride.shop/user/get-messages/${chatId}`);
       setMessages(res.data);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
@@ -191,7 +191,7 @@ const MessageArea = () => {
 
         if (inputValue !== '') {
           const newMessage = { conversationId: chatId, senderId: currentUser._id, text: inputValue, imageUrl, audioUrl };
-          const res = await axios.post('/user/send-message', newMessage);
+          const res = await axios.post('https://perfect-bride.shop/user/send-message', newMessage);
           socket.emit('notify', provId);
           socket.emit('send-message', chatId);
           setMessages([...messages, res.data]);

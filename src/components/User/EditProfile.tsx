@@ -15,7 +15,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(`/user/editProfile/${userId}`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/user/editProfile/${userId}`);
         const userData = response.data;
         setName(userData.name || "");
         setEmail(userData.email || "");
@@ -35,7 +35,7 @@ const EditProfile = () => {
     e.preventDefault();
     try {
       const updateData = { name, email, phone };
-      await axiosInstance.post(`/user/editProfile/${userId}`, updateData);
+      await axiosInstance.post(`https://perfect-bride.shop/user/editProfile/${userId}`, updateData);
       toast.success('Profile Updated Successfully');
 
       navigate("/profile"); 

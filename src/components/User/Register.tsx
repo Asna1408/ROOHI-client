@@ -47,7 +47,7 @@ const Register: React.FC = () => {
       const { displayName, email } = resultsFromGoogle.user;
   
       // Send the name and email to the backend using Axios
-      const response = await axios.post("/user/googleAuth", {
+      const response = await axios.post("https://perfect-bride.shop/user/googleAuth", {
         name: displayName,
         email: email,
       });
@@ -176,7 +176,7 @@ const Register: React.FC = () => {
     //   return;
     // }
 
-    const res = await axios.post('/user/signup', {
+    const res = await axios.post('https://perfect-bride.shop/user/signup', {
       formData
     });
 

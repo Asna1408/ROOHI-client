@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ isSidebarOpen, toggleSidebar }) => {
       if (result.isConfirmed) {
         console.log("logout");
         try {
-          const res = await axiosInstance.get("/admin/logout");
+          const res = await axiosInstance.get("https://perfect-bride.shop/admin/logout");
           if (res.data.message === "success") {
             dispatch(signoutSuccess());
             Swal.fire({
@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ isSidebarOpen, toggleSidebar }) => {
               timer: 2000,
               showConfirmButton: false,
             });
-            navigate("/Superadmin/login");
+            navigate("/superadmin/login");
           }
         } catch (error) {
           Swal.fire({

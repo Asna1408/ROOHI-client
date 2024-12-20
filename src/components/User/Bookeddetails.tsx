@@ -25,7 +25,7 @@ const Bookeddetails: React.FC = () => {
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
-        const response = await axiosInstance.get(`/user/bookdetailsbyid/${BookingId}`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/user/bookdetailsbyid/${BookingId}`);
         setBookingDetails(response.data);
       } catch (error) {
         console.error('Error fetching booking details:', error);
@@ -57,7 +57,7 @@ const Bookeddetails: React.FC = () => {
       if (result.isConfirmed) {
         try {
          
-          const response = await axiosInstance.post(`/user/cancel/${BookingId}`, {
+          const response = await axiosInstance.post(`https://perfect-bride.shop/user/cancel/${BookingId}`, {
             BookingId,
           });
 
@@ -83,7 +83,7 @@ const Bookeddetails: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/user/review/addReview', {
+      const response = await fetch('https://perfect-bride.shop/user/review/addReview', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

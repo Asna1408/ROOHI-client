@@ -32,7 +32,7 @@ const BookingDetailsByService: React.FC = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/user/bookdetails/bookings/${currentUser._id}?page=${page}&limit=10`
+        `https://perfect-bride.shop/user/bookdetails/bookings/${currentUser._id}?page=${page}&limit=10`
       );
       const data = response.data;
 

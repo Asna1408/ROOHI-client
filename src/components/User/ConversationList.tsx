@@ -46,7 +46,7 @@ const ConversationList = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const response = await axiosInstance.get(`/user/get-user-conversations/${currentUser._id}`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/user/get-user-conversations/${currentUser._id}`);
         setConversations(response.data);
       } catch (error) {
         console.error('Failed to fetch conversations', error);

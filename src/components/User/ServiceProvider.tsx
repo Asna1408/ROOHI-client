@@ -29,7 +29,7 @@ const ServiceProvider: React.FC = () => {
   useEffect(() => {
     const fetchProviderData = async () => {
       try {
-        const response = await axios.get(`/user/getallpost/${providerId}`);
+        const response = await axios.get(`https://perfect-bride.shop/user/getallpost/${providerId}`);
         console.log("Provider Details:", response.data);
         setServices(response.data.services); 
       } catch (err: any) {

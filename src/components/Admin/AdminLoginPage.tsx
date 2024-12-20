@@ -23,7 +23,7 @@ const { currentAdmin } = useSelector((state: any) => state.admin);
 
 useEffect(()=>{
     if(currentAdmin){
-      navigate('/Superadmin/login');
+      navigate('/superadmin/login');
     }
 },[])
 
@@ -61,7 +61,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   try {
-  const res = await axiosInstance.post('/admin/admin_login',{
+  const res = await axiosInstance.post('https://perfect-bride.shop/admin/admin_login',{
     email,
     password
   })
@@ -69,13 +69,13 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   if(res.data == 'Invalid'){
     toast.error("Invalid credential")
-    navigate("/Superadmin/login")
+    navigate("/superadmin/login")
     return 
   }
   if(res.data !== 'Invalid'){
     dispatch(signInSuccess(res.data))
     toast.success("Login Successfull")
-    navigate("/Superadmin/dashboard");
+    navigate("/superadmin/dashboard");
 
     
 }else{

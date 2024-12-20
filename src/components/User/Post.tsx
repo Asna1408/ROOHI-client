@@ -31,7 +31,7 @@ const Post = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get("/admin/serviceList");
+        const response = await axiosInstance.get("https://perfect-bride.shop/admin/serviceList");
 
         if (response.data && Array.isArray(response.data.categories)) {
           setServiceCategories(response.data.categories);
@@ -139,7 +139,7 @@ const Post = () => {
         images: imageUrls,
       };
 
-      const response = await axiosInstance.post("/user/uploadpost", newService, {
+      const response = await axiosInstance.post("https://perfect-bride.shop/user/uploadpost", newService, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -86,7 +86,7 @@ const handleGoogleClick = async () => {
     const resultsFromGoogle = await signInWithPopup(auth, provider);
     const { displayName, email } = resultsFromGoogle.user;
 
-    const response = await axios.post("/user/googleAuth", {
+    const response = await axios.post("https://perfect-bride.shop/user/googleAuth", {
       name: displayName,
       email: email,
     });
@@ -155,7 +155,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   try {
-    const res = await axiosInstance.post('/user/login',{
+    const res = await axiosInstance.post('https://perfect-bride.shop/user/login',{
       email,
       password
     })

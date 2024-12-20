@@ -21,7 +21,7 @@ const Availabledates: React.FC<AvailableDatesProps> = ({ serviceId }) => {
     
     const fetchAvailableDates = async () => {
       try {
-        const response = await axiosInstance.get(`/user/services/${serviceId}/availability`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/user/services/${serviceId}/availability`);
         const { availableDates } = response.data;
 
         // Filter out past dates

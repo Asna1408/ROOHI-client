@@ -23,7 +23,7 @@ const ServiceList: React.FC = () => {
   const fetchServiceCategories = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/admin/ServiceList?page=${page}&limit=10`);
+      const response = await axiosInstance.get(`https://perfect-bride.shop/admin/ServiceList?page=${page}&limit=10`);
       setServiceCategories(response.data.categories);
       setTotalPages(response.data.totalPages);
     } catch (err) {
@@ -49,7 +49,7 @@ const ServiceList: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axiosInstance.delete(`/admin/DeleteService-category/${id}`);
+          await axiosInstance.delete(`https://perfect-bride.shop/admin/DeleteService-category/${id}`);
           setServiceCategories(serviceCategories.filter((category) => category._id !== id));
           Swal.fire('Deleted!', 'Service category has been deleted.', 'success');
         } catch {
@@ -74,7 +74,7 @@ const ServiceList: React.FC = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-serif text-customGray font-bold">Services</h1>
-        <Link to="/Superadmin/AddServiceCategory">
+        <Link to="/superadmin/AddServiceCategory">
           <button className="bg-custom-gradient text-white py-2 px-4 rounded hover:bg-custom-gradient">
             Add Service
           </button>
@@ -83,7 +83,7 @@ const ServiceList: React.FC = () => {
       <div className="overflow-x-auto">
         <TableComponent columns={columns} data={dataWithIndex} actions={(row) => (
           <span className="flex items-center">
-            <Link to={`/Superadmin/EditServiceCategory/${row._id}`}>
+            <Link to={`/superadmin/EditServiceCategory/${row._id}`}>
               <FaEdit className="text-blue-500 cursor-pointer mr-2" />
             </Link>
             <FaTrash

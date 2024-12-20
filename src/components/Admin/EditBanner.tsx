@@ -21,7 +21,7 @@ const EditBanner: React.FC = () => {
     const fetchBannerData = async () => {
       if (BannerId) {
         try {
-          const response = await axiosInstance.get(`/admin/banner/${BannerId}`);
+          const response = await axiosInstance.get(`https://perfect-bride.shop/admin/banner/${BannerId}`);
           setBannerData(response.data);
           if (response.data.images && response.data.images[0]) {
             setImagePreview(response.data.images[0]); // Show the existing image preview
@@ -106,7 +106,7 @@ const EditBanner: React.FC = () => {
       };
 
       await axiosInstance.post(
-        `/admin/banner/updateBanner/${BannerId}`,
+        `https://perfect-bride.shop/admin/banner/updateBanner/${BannerId}`,
         updatedBanner,
         {
           headers: {
@@ -116,7 +116,7 @@ const EditBanner: React.FC = () => {
       );
 
       toast.success("Banner updated successfully");
-      navigate("/Superadmin/banner");
+      navigate("/superadmin/banner");
     } catch (error) {
       toast.error("Failed to edit Banner");
       console.error("Error updating Banner:", error);

@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
         toast.error("Session expired. Please log in again.");
         Cookies.remove("access_token");
         Cookies.remove("refresh_token");
-        window.location.href = "/Superadmin/login"; // Redirect to login page
+        window.location.href = "/superadmin/login"; // Redirect to login page
         return Promise.reject(err);
       }
     }

@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      const res = await axios.post("/user/forgot-password", {
+      const res = await axios.post("https://perfect-bride.shop/user/forgot-password", {
         email : email,
         link: url
       });

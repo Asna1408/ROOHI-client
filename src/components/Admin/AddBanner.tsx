@@ -103,14 +103,14 @@ const AddBanner: React.FC = () => {
         images: [imageUrl], 
       };
 
-       await axiosInstance.post('/admin/banner/addBanner', newBanner, {
+       await axiosInstance.post('https://perfect-bride.shop/admin/banner/addBanner', newBanner, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       toast.success('Banner added successfully');
-      navigate("/Superadmin/banner");
+      navigate("/superadmin/banner");
 
     } catch (error) {
       toast.error('Failed to add Banner');

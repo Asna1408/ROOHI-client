@@ -17,7 +17,7 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axiosInstance.get(`/admin/service-category/${categoryId}`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/admin/service-category/${categoryId}`);
         setTypeName(response.data.type_name);
         setDescription(response.data.description);
         setLoading(false);
@@ -45,7 +45,7 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
     setLoading(true);
     try {
       const response = await axios.put(
-        `/admin/EditService-category/${categoryId}`, 
+        `https://perfect-bride.shop/admin/EditService-category/${categoryId}`, 
         {
           type_name: trimmedTypeName,
         description: trimmedDescription,
@@ -54,7 +54,7 @@ const EditServiceCategoryPage: React.FC<EditServiceCategoryProps> = ({ categoryI
 
       toast.success('Category updated successfully!');
       console.log('Updated Category:', response.data);
-      navigate('/Superadmin/ServiceList'); 
+      navigate('/superadmin/ServiceList'); 
 
     } catch (error) {
       toast.error('Error updating category');

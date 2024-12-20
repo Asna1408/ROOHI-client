@@ -71,7 +71,7 @@ import axiosInstance from '../../constant/axiosInstance';
           }).then(async (result) => {
             if (result.isConfirmed) {
               try {
-                const res = await axiosInstance.get('/user/logout');
+                const res = await axiosInstance.get('https://perfect-bride.shop/user/logout');
         
                 if (res.data.message === 'success') {
                   dispatch(signoutSuccess());

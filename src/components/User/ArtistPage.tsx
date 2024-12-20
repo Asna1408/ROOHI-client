@@ -27,7 +27,7 @@ const ArtistPage: React.FC = () => {
 
     const fetchService = async () => {
       try {
-        const response = await axios.get(`/user/servicedetails/${id}`);
+        const response = await axios.get(`https://perfect-bride.shop/user/servicedetails/${id}`);
         setService(response.data);
       } catch (err) {
         if (axios.isAxiosError(err)) {
@@ -43,7 +43,7 @@ const ArtistPage: React.FC = () => {
 
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`/user/service/${id}/reviews`);
+        const response = await axios.get(`https://perfect-bride.shop/user/service/${id}/reviews`);
         setReviews(response.data);
       } catch (err) {
         if (axios.isAxiosError(err)) {
@@ -57,7 +57,7 @@ const ArtistPage: React.FC = () => {
 
     const fetchBookingStatus = async () => {
       try {
-        const response = await axiosInstance.get(`/user/booking/${currentUser._id}/${id}/status`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/user/booking/${currentUser._id}/${id}/status`);
         console.log(response.data, 'booking status');
         setBookingStatus(response.data.bookingStatus?.status || null);
       } catch (err) {
@@ -77,7 +77,7 @@ const ArtistPage: React.FC = () => {
     }
   
     try {
-      const response = await fetch('/user/create-conversation', {
+      const response = await fetch('https://perfect-bride.shop/user/create-conversation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

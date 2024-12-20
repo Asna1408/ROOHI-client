@@ -26,7 +26,7 @@ const BannerList: React.FC = () => {
   const fetchBanners = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/admin/banner?page=${page}&limit=10`);
+      const response = await axiosInstance.get(`https://perfect-bride.shop/admin/banner?page=${page}&limit=10`);
       setBanners(response.data.banners);
       setTotalPages(response.data.totalPages);
     } catch (err) {
@@ -52,7 +52,7 @@ const BannerList: React.FC = () => {
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
-              await axiosInstance.delete(`/admin/banner/deleteBanner/${BannerId}`);  
+              await axiosInstance.delete(`https://perfect-bride.shop/admin/banner/deleteBanner/${BannerId}`);  
               setBanners(banners.filter(banner => banner._id !== BannerId));
               Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
             } catch (err) {
@@ -67,7 +67,7 @@ const BannerList: React.FC = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-serif text-customGray font-bold">Banners</h1>
-        <Link to="/Superadmin/banner/AddBanner">
+        <Link to="/superadmin/banner/AddBanner">
           <button className="bg-custom-gradient text-white py-2 px-4 rounded hover:bg-custom-gradient">
             Add Banner
           </button>
@@ -96,7 +96,7 @@ const BannerList: React.FC = () => {
               }))}
               actions={(row) => (
                 <span className="flex items-center">
-                  <Link to={`/Superadmin/banner/${row._id}`}>
+                  <Link to={`/superadmin/banner/${row._id}`}>
                     <FaEdit className="text-blue-500 cursor-pointer mr-2" />
                   </Link>
                   <FaTrash

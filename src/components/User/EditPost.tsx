@@ -36,7 +36,7 @@ const EditPost = () => {
   
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get('/admin/serviceList');
+        const response = await axiosInstance.get('https://perfect-bride.shop/admin/serviceList');
   
         if (response.data && Array.isArray(response.data.categories)) {
           setServiceCategories(response.data.categories); 
@@ -60,7 +60,7 @@ const EditPost = () => {
       if (postId) {
         try {
           console.log(`Fetching service data from: /user/editpost/${postId}`);
-          const response = await axiosInstance.get(`/user/editpost/${postId}`);
+          const response = await axiosInstance.get(`https://perfect-bride.shop/user/editpost/${postId}`);
     
           if (response.status === 200) {
             const data = response.data;
@@ -178,7 +178,7 @@ const EditPost = () => {
       };
   
       
-      const response = await axiosInstance.put(`/user/editpost/${postId}`, updatedService, {
+      const response = await axiosInstance.put(`https://perfect-bride.shop/user/editpost/${postId}`, updatedService, {
         headers: {
           'Content-Type': 'application/json',
         },

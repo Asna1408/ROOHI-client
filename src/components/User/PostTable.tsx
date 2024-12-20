@@ -31,7 +31,7 @@ const PostTable: React.FC = () => {
   const fetchServices = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/user/getallpost/${currentUser._id}`, {
+      const response = await axiosInstance.get(`https://perfect-bride.shop/user/getallpost/${currentUser._id}`, {
         params: {
           page,
           limit: 10,
@@ -77,7 +77,7 @@ const PostTable: React.FC = () => {
   
     if (result.isConfirmed) {
       try {
-        const response = await axiosInstance.delete(`/user/deletepost/${serviceId}`);
+        const response = await axiosInstance.delete(`https://perfect-bride.shop/user/deletepost/${serviceId}`);
   
         if (response.status === 200) {
           setServices((prevServices) =>

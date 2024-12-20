@@ -41,7 +41,7 @@ const ResetPassword = () => {
 
 
     try {
-      const res = await axios.post('/user/reset-password', {
+      const res = await axios.post('https://perfect-bride.shop/user/reset-password', {
         email: email,
         password: password
       })

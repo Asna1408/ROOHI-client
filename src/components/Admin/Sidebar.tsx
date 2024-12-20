@@ -21,28 +21,28 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     <ul className="mt-6">
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaHome className="mr-2 text-customGold hover:text-white" />
-        <Link to="/SuperAdmin/dashboard" className="hover:text-white">Dashboard</Link>
+        <Link to="/superadmin/dashboard" className="hover:text-white">Dashboard</Link>
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaUsers className="mr-2 text-customGold" />
-        <Link to="/SuperAdmin/UserList" className="hover:text-white">Users</Link>
+        <Link to="/superadmin/UserList" className="hover:text-white">Users</Link>
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaFlag className="mr-2 text-customGold" />
-        <Link to="/SuperAdmin/banner" className="hover:text-white">Banner</Link>
+        <Link to="/superadmin/banner" className="hover:text-white">Banner</Link>
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaToolbox className="mr-2 text-customGold" />
-        <Link to="/Superadmin/ServiceList" className="hover:text-white">Services</Link>
+        <Link to="/superadmin/ServiceList" className="hover:text-white">Services</Link>
       </li>
       <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaCalendarCheck  className="mr-2 text-customGold" />
-        <Link to="/Superadmin/BookingList" className="hover:text-white">Booking</Link>
+        <Link to="/superadmin/BookingList" className="hover:text-white">Booking</Link>
       </li>
       
       {/* <li className="flex items-center p-4 text-lg font-serif hover:bg-custom-gradient hover:text-white">
         <FaCalendarAlt className="mr-2 text-customGold" />
-        <Link to="/Superadmin/PayoutList" className="hover:text-white">Payout</Link>
+        <Link to="/superadmin/PayoutList" className="hover:text-white">Payout</Link>
       </li> */}
     </ul>
   

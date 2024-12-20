@@ -22,7 +22,7 @@ const BookeddetailsService: React.FC = () => {
     const fetchBookingDetails = async () => {
       try {
         const response = await axiosInstance.get(
-          `/user/bookdetailsbyid/${BookingId}`
+          `https://perfect-bride.shop/user/bookdetailsbyid/${BookingId}`
         );
         setBookingDetails(response.data);
         setStatus(response.data.status);
@@ -55,7 +55,7 @@ const BookeddetailsService: React.FC = () => {
       if (result.isConfirmed) {
         try {
           const response = await axiosInstance.post(
-            `/user/cancel/${BookingId}`,
+            `https://perfect-bride.shop/user/cancel/${BookingId}`,
             {
               BookingId,
             }
@@ -91,7 +91,7 @@ const BookeddetailsService: React.FC = () => {
     }
 
     try {
-      const response = await axiosInstance.post(`/user/complete/${BookingId}`);
+      const response = await axiosInstance.post(`https://perfect-bride.shop/user/complete/${BookingId}`);
       if (response.status === 200) {
         setStatus("completed");
         Swal.fire(

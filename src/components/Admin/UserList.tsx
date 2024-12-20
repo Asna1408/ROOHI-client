@@ -20,7 +20,7 @@ const UserList: React.FC = () => {
   const fetchUsers = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/admin/UserList?page=${page}&limit=10`); 
+      const response = await axiosInstance.get(`https://perfect-bride.shop/admin/UserList?page=${page}&limit=10`); 
       setUsers(response.data.users);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -36,7 +36,7 @@ const UserList: React.FC = () => {
 
   const handleBlock = async (userId: string) => {
     try {
-      await axiosInstance.post(`/admin/block/${userId}`);
+      await axiosInstance.post(`https://perfect-bride.shop/admin/block/${userId}`);
       setUsers(users.map(user => 
         user._id === userId ? { ...user, isBlocked: true } : user
       ));
@@ -47,7 +47,7 @@ const UserList: React.FC = () => {
 
   const handleUnblock = async (userId: string) => {
     try {
-      await axiosInstance.post(`/admin/unblock/${userId}`);
+      await axiosInstance.post(`https://perfect-bride.shop/admin/unblock/${userId}`);
       setUsers(users.map(user => 
         user._id === userId ? { ...user, isBlocked: false } : user
       ));

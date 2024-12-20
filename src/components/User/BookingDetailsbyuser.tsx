@@ -29,7 +29,7 @@ const BookingDetailsByUser: React.FC = () => {
   const fetchBookingDetails = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/user/bookdetails/${currentUser._id}/bookings`, {
+      const response = await axiosInstance.get(`https://perfect-bride.shop/user/bookdetails/${currentUser._id}/bookings`, {
         params: {
           page: page,
           limit: 10

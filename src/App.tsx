@@ -76,19 +76,19 @@ const App = () => {
             </Route>
 
                 //admin routes
-                <Route path="/Superadmin/login" element={<AdminLogin />} />
+                <Route path="/superadmin/login" element={<AdminLogin />} />
                 <Route element={<AdminPrivateRoute />}>
-                   <Route path="/Superadmin/dashboard" element={<AdminDashboard />} />
-                   <Route path="/Superadmin/UserList" element={<AdminUser />} />
-                   <Route path="/Superadmin/ServiceList" element={<AdminService/>} />
-                   <Route path="/Superadmin/AddServiceCategory" element={<AddServiceCategory/>} />
-                   <Route path="/Superadmin/EditServiceCategory/:id" element={<EditServiceCategory />} />
-                   <Route path="/Superadmin/BookingList" element={<AdminBooking />} />
-                   <Route path="/Superadmin/BookingList/:bookingId" element={<Adminbookingsingle />} />
-                   <Route path="/Superadmin/banner" element={<Banner />} />
-                   <Route path="/Superadmin/banner/AddBanner" element={<AddBannerForm />} />
-                   <Route path='/Superadmin/banner/:BannerId' element={<EditBannerPage />} />
-                   <Route path='/Superadmin/Payout' element={<AdminPayout/>} />
+                   <Route path="/superadmin/dashboard" element={<AdminDashboard />} />
+                   <Route path="/superadmin/UserList" element={<AdminUser />} />
+                   <Route path="/superadmin/ServiceList" element={<AdminService/>} />
+                   <Route path="/superadmin/AddServiceCategory" element={<AddServiceCategory/>} />
+                   <Route path="/superadmin/EditServiceCategory/:id" element={<EditServiceCategory />} />
+                   <Route path="/superadmin/BookingList" element={<AdminBooking />} />
+                   <Route path="/superadmin/BookingList/:bookingId" element={<Adminbookingsingle />} />
+                   <Route path="/superadmin/banner" element={<Banner />} />
+                   <Route path="/superadmin/banner/AddBanner" element={<AddBannerForm />} />
+                   <Route path='/superadmin/banner/:BannerId' element={<EditBannerPage />} />
+                   <Route path='/superadmin/Payout' element={<AdminPayout/>} />
                 </Route>
           </Routes>
     </Router>

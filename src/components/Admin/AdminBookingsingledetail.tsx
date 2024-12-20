@@ -29,7 +29,7 @@ const AdminBookingSingledetail: React.FC = () => {
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
-        const response = await axiosInstance.get(`/admin/Bookdetails/${bookingId}`);
+        const response = await axiosInstance.get(`https://perfect-bride.shop/admin/Bookdetails/${bookingId}`);
         setBookingDetails(response.data);
         setLoading(false);
       } catch (err) {
@@ -76,7 +76,7 @@ const AdminBookingSingledetail: React.FC = () => {
         {/* <button
           className="px-4 py-2 bg-custom-gradient text-white rounded-md"
         >
-           <Link to="/Superadmin/Payout">
+           <Link to="/superadmin/Payout">
           Initiate Payout
           </Link>
 

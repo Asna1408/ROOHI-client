@@ -52,7 +52,7 @@ const BannerList: React.FC = () => {
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
-              await axiosInstance.delete(`https://perfect-bride.shop/admin/banner/deleteBanner/${BannerId}`);  
+              await axiosInstance.delete(`admin/banner/deleteBanner/${BannerId}`);  
               setBanners(banners.filter(banner => banner._id !== BannerId));
               Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
             } catch (err) {
